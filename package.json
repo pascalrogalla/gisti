@@ -1,0 +1,41 @@
+{
+  "name": "gist-cli",
+  "version": "0.0.1",
+  "description": "CLI for gist",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pascalrogalla/gist-cli.git"
+  },
+  "keywords": [
+    "gist",
+    "cli",
+    "github",
+    "nodejs",
+    "js",
+    "es"
+  ],
+  "author": "@pascalrogalla",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pascalrogalla/gist-cli/issues"
+  },
+  "homepage": "https://github.com/pascalrogalla/gist-cli#readme",
+  "dependencies": {
+    "@octokit/rest": "^16.35.0",
+    "chalk": "^3.0.0",
+    "clear": "^0.1.0",
+    "clui": "^0.3.6",
+    "configstore": "^5.0.0",
+    "figlet": "^1.2.4",
+    "inquirer": "^7.0.0",
+    "minimist": "^1.2.0"
+  },
+  "devDependencies": {
+    "esm": "^3.2.25"
+  }
+}
