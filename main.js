@@ -6,7 +6,13 @@ const argv = minimist(process.argv.slice(2))
 
 import github from "./lib/github"
 
-import { downloadGist, listOwnGists, listStarredGists } from "./lib/gist"
+import {
+  downloadGist,
+  listOwnGists,
+  listPrivateGists,
+  listStarredGists,
+  openGist
+} from "./lib/gist"
 
 clear()
 
@@ -25,10 +31,16 @@ const run = async () => {
     downloadGist()
   }
   if (argv.l || argv.list) {
-    listOwnGists()
+    if (argv.s || argv.starred) {
+      listStarredGists()
+    } else if (argv.p || argv.private) {
+      listPrivateGists()
+    } else {
+      listOwnGists()
+    }
   }
-  if (argv.s || argv.starred) {
-    listStarredGists()
+  if (argv.o || argv.open) {
+    openGist()
   }
 }
 

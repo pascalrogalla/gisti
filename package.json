@@ -7,10 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/pascalrogalla/gist-cli.git"
-  },
+  "repository": "git+https://github.com/pascalrogalla/gist-cli.git",
   "keywords": [
     "gist",
     "cli",
@@ -33,9 +30,11 @@
     "configstore": "^5.0.0",
     "figlet": "^1.2.4",
     "inquirer": "^7.0.0",
-    "minimist": "^1.2.0"
+    "minimist": "^1.2.0",
+    "opn": "^6.0.0"
   },
   "devDependencies": {
     "esm": "^3.2.25"
-  }
+  },
+  "private": true
 }
