@@ -36,5 +36,8 @@
   "devDependencies": {
     "esm": "^3.2.25"
   },
+  "bin": {
+    "gist-cli": "./index.js"
+  },
   "private": true
 }
