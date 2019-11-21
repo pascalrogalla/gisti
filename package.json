@@ -39,6 +39,5 @@
   },
   "bin": {
     "gist-cli": "./index.js"
-  },
-  "private": true
+  }
 }
