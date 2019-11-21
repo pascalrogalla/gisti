@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "gist",
-    "url": "git+https://github.com/pascalrogalla/gist-cli.git"
+    "url": "git+https://github.com/pascalrogalla/gisti.git"
   },
   "keywords": [
     "gist",
@@ -22,9 +22,9 @@
   "author": "@pascalrogalla",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/pascalrogalla/gist-cli/issues"
+    "url": "https://github.com/pascalrogalla/gisti/issues"
   },
-  "homepage": "https://github.com/pascalrogalla/gist-cli#readme",
+  "homepage": "https://github.com/pascalrogalla/gisti#readme",
   "dependencies": {
     "@octokit/rest": "^16.35.0",
     "chalk": "^3.0.0",

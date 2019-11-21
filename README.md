@@ -2,11 +2,11 @@
 
 > GistCLI - The interactive CLI for gist
 
-To learn more, visit [https://github.com/pascalrogalla/gist-cli](https://github.com/pascalrogalla/gist-cli)
+To learn more, visit [https://github.com/pascalrogalla/gisti](https://github.com/pascalrogalla/gisti)
 
 ## SYNOPSIS
 
-`gist-cli [-l, --list] [-d, --download] [-o, --open] [-s, --starred] [-p, --private] [-v] [-h]`
+`gisti [-l, --list] [-d, --download] [-o, --open] [-s, --starred] [-p, --private] [-v] [-h]`
 
 ## DESCRIPTION
 
@@ -14,21 +14,21 @@ GistCLI is a command line tool that supports interactive gist handling in your t
 
 ## Website
 
-[https://github.com/pascalrogalla/gist-cli](https://github.com/pascalrogalla/gist-cli)
+[https://github.com/pascalrogalla/gisti](https://github.com/pascalrogalla/gisti)
 
 ## EXAMPLES
 
-`npm install gist-cli -g`
+`npm install gisti -g`
 
-`gist-cli -l`
+`gisti -l`
 
-`gist-cli -l -p`
+`gisti -l -p`
 
-`gist-cli -d -s`
+`gisti -d -s`
 
-`gist-cli -h`
+`gisti -h`
 
-`gist-cli -v`
+`gisti -v`
 
 ## OPTIONS
 
@@ -60,7 +60,7 @@ Add your github personal token
 
 ## BUGS
 
-Please report any bugs to https://github.com/pascalrogalla/gist-cli.
+Please report any bugs to https://github.com/pascalrogalla/gisti.
 
 ## LICENSE
 

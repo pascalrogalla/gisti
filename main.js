@@ -70,7 +70,7 @@ const run = async () => {
     openGist(gists)
   }
   if (argv.v || argv.version) {
-    console.log(chalk.green.bold(`gist-cli ${pkg.version} 🚀`))
+    console.log(chalk.green.bold(`gisti ${pkg.version} 🚀`))
   }
   if (argv.h || argv.help) {
     mdConsole.log(getHelp())
