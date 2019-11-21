@@ -44,7 +44,6 @@ const run = async () => {
   let token = github.getStoredGithubToken()
 
   if (argv.token) {
-    console.log(argv)
     github.setToken(argv.token)
     return
   }
