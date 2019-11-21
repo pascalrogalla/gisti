@@ -4,13 +4,12 @@ import clear from "clear"
 import chalk from "chalk"
 import figlet from "figlet"
 import minimist from "minimist"
-import fs from "fs"
 import mdConsole from "consolemd"
-import "./README.md"
 
 const argv = minimist(process.argv.slice(2))
 
 import github from "./lib/github"
+import { getHelp } from "./lib"
 const oktokit = github.getInstance()
 
 import { downloadGist, openGist, listGists } from "./lib/gist"
@@ -68,8 +67,7 @@ const run = async () => {
     console.log(chalk.green.bold(`gist-cli ${pkg.version} 🚀`))
   }
   if (argv.h || argv.help) {
-    let text = fs.readFileSync("./README.md", "utf8")
-    mdConsole.log(text)
+    mdConsole.log(getHelp())
   }
   if (token) {
     github.setToken(token)
