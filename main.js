@@ -68,7 +68,7 @@ const run = async () => {
     console.log(chalk.green.bold(`gist-cli ${pkg.version} 🚀`))
   }
   if (argv.h || argv.help) {
-    let text = fs.readFileSync("README.md", "utf8")
+    let text = fs.readFileSync("./README.md", "utf8")
     mdConsole.log(text)
   }
   if (token) {
