@@ -1,6 +1,6 @@
 {
   "name": "gisti",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "GISTI - The interactive CLI for gist",
   "main": "index.js",
   "scripts": {
