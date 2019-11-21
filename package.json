@@ -35,9 +35,7 @@
     "figlet": "^1.2.4",
     "inquirer": "^7.0.0",
     "minimist": "^1.2.0",
-    "opn": "^6.0.0"
-  },
-  "devDependencies": {
+    "opn": "^6.0.0",
     "esm": "^3.2.25"
   },
   "bin": {
