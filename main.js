@@ -42,6 +42,13 @@ const getGists = async () => {
 
 const run = async () => {
   let token = github.getStoredGithubToken()
+
+  if (argv.token) {
+    console.log(argv)
+    github.setToken(argv.token)
+    return
+  }
+
   if (!token) {
     console.log(chalk.red.bold("Add your personal git access"))
     console.log("run gisti --token [token]")
@@ -68,9 +75,6 @@ const run = async () => {
   }
   if (argv.h || argv.help) {
     mdConsole.log(getHelp())
-  }
-  if (argv.token) {
-    github.setToken(argv.token)
   }
 }
 
