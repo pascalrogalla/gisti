@@ -4,12 +4,11 @@ import clear from "clear"
 import chalk from "chalk"
 import figlet from "figlet"
 import minimist from "minimist"
-import fs from "fs"
-import mdConsole from "consolemd"
 
 const argv = minimist(process.argv.slice(2))
 
 import github from "./lib/github"
+import { getHelp } from "./lib"
 const oktokit = github.getInstance()
 
 import { downloadGist, openGist, listGists } from "./lib/gist"
@@ -42,9 +41,16 @@ const getGists = async () => {
 
 const run = async () => {
   let token = github.getStoredGithubToken()
+
+  if (argv.token) {
+    github.setToken(argv.token)
+    return
+  }
+
   if (!token) {
-    await github.setGithubCredentials()
-    token = await github.registerNewToken()
+    console.log(chalk.red.bold("Add your personal git access"))
+    console.log("run gisti --token [token]")
+    return
   }
 
   if (argv.d || argv.download) {
@@ -63,11 +69,10 @@ const run = async () => {
     openGist(gists)
   }
   if (argv.v || argv.version) {
-    console.log(chalk.green.bold(`gist-cli ${pkg.version} 🚀`))
+    console.log(chalk.green.bold(`gisti ${pkg.version} 🚀`))
   }
   if (argv.h || argv.help) {
-    let text = fs.readFileSync("README.md", "utf8")
-    mdConsole.log(text)
+    console.log(getHelp())
   }
 }
 

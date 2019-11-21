@@ -1,6 +1,6 @@
 {
   "name": "gisti",
-  "version": "0.0.1",
+  "version": "0.0.11",
   "description": "GISTI - The interactive CLI for gist",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "gist",
-    "url": "git+https://github.com/pascalrogalla/gist-cli.git"
+    "url": "git+https://github.com/pascalrogalla/gisti.git"
   },
   "keywords": [
     "gist",
@@ -22,21 +22,20 @@
   "author": "@pascalrogalla",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/pascalrogalla/gist-cli/issues"
+    "url": "https://github.com/pascalrogalla/gisti/issues"
   },
-  "homepage": "https://github.com/pascalrogalla/gist-cli#readme",
+  "homepage": "https://github.com/pascalrogalla/gisti#readme",
   "dependencies": {
     "@octokit/rest": "^16.35.0",
     "chalk": "^3.0.0",
     "clear": "^0.1.0",
     "clui": "^0.3.6",
     "configstore": "^5.0.0",
-    "consolemd": "^0.2.1",
+    "esm": "^3.2.25",
     "figlet": "^1.2.4",
     "inquirer": "^7.0.0",
     "minimist": "^1.2.0",
-    "opn": "^6.0.0",
-    "esm": "^3.2.25"
+    "opn": "^6.0.0"
   },
   "bin": {
     "gisti": "./index.js"
