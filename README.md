@@ -55,7 +55,8 @@ Show this help
 
 ## CONFIGURATION
 
-Add your github personal token to `/Users/pso/.config/gist-cli/config.json`
+Add your github personal token
+`gisti --token [token]`
 
 ## BUGS
 

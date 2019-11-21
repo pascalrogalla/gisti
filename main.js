@@ -6,6 +6,7 @@ import figlet from "figlet"
 import minimist from "minimist"
 import fs from "fs"
 import mdConsole from "consolemd"
+import "./README.md"
 
 const argv = minimist(process.argv.slice(2))
 
@@ -43,8 +44,9 @@ const getGists = async () => {
 const run = async () => {
   let token = github.getStoredGithubToken()
   if (!token) {
-    await github.setGithubCredentials()
-    token = await github.registerNewToken()
+    console.log(chalk.red.bold("Add your personal git access"))
+    console.log("run gisti --token [token]")
+    return
   }
 
   if (argv.d || argv.download) {
@@ -68,6 +70,9 @@ const run = async () => {
   if (argv.h || argv.help) {
     let text = fs.readFileSync("README.md", "utf8")
     mdConsole.log(text)
+  }
+  if (token) {
+    github.setToken(token)
   }
 }
 
