@@ -180,6 +180,12 @@ configstore@^5.0.0:
     write-file-atomic "^3.0.0"
     xdg-basedir "^4.0.0"
 
+consolemd@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/consolemd/-/consolemd-0.2.1.tgz#7f6d3a2ed2f8549520fa90c5af9a0d283be11503"
+  dependencies:
+    echomd "^0.2.3"
+
 cross-spawn@^6.0.0:
   version "6.0.5"
   resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-6.0.5.tgz#4a5ec7c64dfae22c3a14124dbacdee846d80cbc4"
@@ -216,6 +222,10 @@ dot-prop@^5.1.0:
   resolved "https://registry.yarnpkg.com/dot-prop/-/dot-prop-5.2.0.tgz#c34ecc29556dc45f1f4c22697b6f4904e0cc4fcb"
   dependencies:
     is-obj "^2.0.0"
+
+echomd@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/echomd/-/echomd-0.2.3.tgz#79015108ee40aecb436f7573d4b7a1c4ea0ed728"
 
 emoji-regex@^8.0.0:
   version "8.0.0"

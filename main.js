@@ -1,7 +1,12 @@
+import pkg from "./package.json"
+
 import clear from "clear"
 import chalk from "chalk"
 import figlet from "figlet"
 import minimist from "minimist"
+import fs from "fs"
+import mdConsole from "consolemd"
+
 const argv = minimist(process.argv.slice(2))
 
 import github from "./lib/github"
@@ -11,14 +16,16 @@ import { downloadGist, openGist, listGists } from "./lib/gist"
 
 clear()
 
-console.log(
-  chalk.yellow(
-    figlet.textSync("GIST CLI", {
-      font: "ANSI Shadow",
-      horizontalLayout: "full"
-    })
+if (!argv.v && !argv.version && !argv.help) {
+  console.log(
+    chalk.yellow(
+      figlet.textSync("GIST CLI", {
+        font: "ANSI Shadow",
+        horizontalLayout: "full"
+      })
+    )
   )
-)
+}
 
 const getGists = async () => {
   if (argv.s || argv.starred) {
@@ -49,11 +56,18 @@ const run = async () => {
     listGists(gists)
   }
   if (argv.search) {
-    //search
+    //TODO: Search
   }
   if (argv.o || argv.open) {
     let { data: gists } = await getGists()
     openGist(gists)
+  }
+  if (argv.v || argv.version) {
+    console.log(chalk.green.bold(`gist-cli ${pkg.version} 🚀`))
+  }
+  if (argv.h || argv.help) {
+    let text = fs.readFileSync("README.md", "utf8")
+    mdConsole.log(text)
   }
 }
 

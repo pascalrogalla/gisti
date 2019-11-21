@@ -28,6 +28,7 @@
     "clear": "^0.1.0",
     "clui": "^0.3.6",
     "configstore": "^5.0.0",
+    "consolemd": "^0.2.1",
     "figlet": "^1.2.4",
     "inquirer": "^7.0.0",
     "minimist": "^1.2.0",
