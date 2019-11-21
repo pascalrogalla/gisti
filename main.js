@@ -5,20 +5,33 @@ import minimist from "minimist"
 const argv = minimist(process.argv.slice(2))
 
 import github from "./lib/github"
+const oktokit = github.getInstance()
 
-import {
-  downloadGist,
-  listOwnGists,
-  listPrivateGists,
-  listStarredGists,
-  openGist
-} from "./lib/gist"
+import { downloadGist, openGist, listGists } from "./lib/gist"
 
 clear()
 
 console.log(
-  chalk.yellow(figlet.textSync("GIST CLI", { horizontalLayout: "full" }))
+  chalk.yellow(
+    figlet.textSync("GIST CLI", {
+      font: "ANSI Shadow",
+      horizontalLayout: "full"
+    })
+  )
 )
+
+const getGists = async () => {
+  if (argv.s || argv.starred) {
+    return oktokit.gists.listStarred()
+  } else if (argv.p || argv.private) {
+    const { data } = await oktokit.gists.list()
+    return Promise.resolve({
+      data: data.filter(({ public: p }) => p === false)
+    })
+  } else {
+    return oktokit.gists.list()
+  }
+}
 
 const run = async () => {
   let token = github.getStoredGithubToken()
@@ -28,19 +41,19 @@ const run = async () => {
   }
 
   if (argv.d || argv.download) {
-    downloadGist()
+    let { data: gists } = await getGists()
+    downloadGist(gists)
   }
   if (argv.l || argv.list) {
-    if (argv.s || argv.starred) {
-      listStarredGists()
-    } else if (argv.p || argv.private) {
-      listPrivateGists()
-    } else {
-      listOwnGists()
-    }
+    let { data: gists } = await getGists()
+    listGists(gists)
+  }
+  if (argv.search) {
+    //search
   }
   if (argv.o || argv.open) {
-    openGist()
+    let { data: gists } = await getGists()
+    openGist(gists)
   }
 }
 
