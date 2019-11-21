@@ -69,8 +69,8 @@ const run = async () => {
   if (argv.h || argv.help) {
     mdConsole.log(getHelp())
   }
-  if (token) {
-    github.setToken(token)
+  if (argv.token) {
+    github.setToken(argv.token)
   }
 }
 
