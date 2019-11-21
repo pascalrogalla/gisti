@@ -19,7 +19,7 @@ clear()
 if (!argv.v && !argv.version && !argv.help) {
   console.log(
     chalk.yellow(
-      figlet.textSync("GIST CLI", {
+      figlet.textSync("GISTI", {
         font: "ANSI Shadow",
         horizontalLayout: "full"
       })

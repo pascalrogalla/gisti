@@ -1,13 +1,16 @@
 {
-  "name": "gist-cli",
+  "name": "gisti",
   "version": "0.0.1",
-  "description": "CLI for gist",
+  "description": "GISTI - The interactive CLI for gist",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
   },
-  "repository": "git+https://github.com/pascalrogalla/gist-cli.git",
+  "repository": {
+    "type": "gist",
+    "url": "git+https://github.com/pascalrogalla/gist-cli.git"
+  },
   "keywords": [
     "gist",
     "cli",
@@ -38,6 +41,9 @@
     "esm": "^3.2.25"
   },
   "bin": {
-    "gist-cli": "./index.js"
+    "gisti": "./index.js"
+  },
+  "directories": {
+    "lib": "lib"
   }
 }
