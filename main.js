@@ -14,6 +14,7 @@ const oktokit = github.getInstance()
 import {
   interactiveDownloadGist,
   interactiveOpenGist,
+  interactiveCopyGistId,
   openGist,
   listGists
 } from "./lib/gist"
@@ -73,6 +74,11 @@ const run = async () => {
   }
   if (argv.search) {
     //TODO: Search
+  }
+  if (argv.c || argv.copy) {
+    const copy = argv.c || argv.copy
+    let { data: gists } = await getGists()
+    interactiveCopyGistId(gists)
   }
   if (argv.o || argv.open) {
     const open = argv.o || argv.open
