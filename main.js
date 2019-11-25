@@ -8,13 +8,14 @@ import minimist from "minimist"
 const argv = minimist(process.argv.slice(2))
 
 import github from "./lib/github"
-import { getHelp } from "./lib"
+import { getHelp } from "./lib/utils"
 const oktokit = github.getInstance()
 
 import {
   interactiveDownloadGist,
   interactiveOpenGist,
   interactiveCopyGistId,
+  interactiveSearchGist,
   openGist,
   listGists
 } from "./lib/gist"
@@ -63,22 +64,26 @@ const run = async () => {
     return
   }
 
+  if (argv.search) {
+    let { data: gists } = await getGists()
+    interactiveSearchGist(gists, getFunction())
+    return
+  }
+
   if (argv.d || argv.download) {
     let { data: gists } = await getGists()
     interactiveDownloadGist(gists)
+    return
   }
   if (argv.l || argv.list) {
     let { data: gist } = await getGists()
-    console.log(gist)
     listGists(gist)
-  }
-  if (argv.search) {
-    //TODO: Search
+    return
   }
   if (argv.c || argv.copy) {
-    const copy = argv.c || argv.copy
     let { data: gists } = await getGists()
     interactiveCopyGistId(gists)
+    return
   }
   if (argv.o || argv.open) {
     const open = argv.o || argv.open
@@ -89,6 +94,7 @@ const run = async () => {
       let { data: gists } = await getGists()
       interactiveOpenGist(gists)
     }
+    return
   }
   if (argv.v || argv.version) {
     console.log(chalk.green.bold(`gisti ${pkg.version} 🚀`))
@@ -99,3 +105,21 @@ const run = async () => {
 }
 
 run()
+
+const getFunction = () => {
+  if (argv.d || argv.download) {
+    return interactiveDownloadGist
+  }
+  if (argv.l || argv.list) {
+    return listGists
+  }
+
+  if (argv.c || argv.copy) {
+    return interactiveCopyGistId
+  }
+  if (argv.o || argv.open) {
+    return interactiveOpenGist
+  }
+
+  return listGists
+}
