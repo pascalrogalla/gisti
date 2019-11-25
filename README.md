@@ -38,7 +38,7 @@ List your gists
 `--download`, `-d`
 Download a gist
 
-`--open`, `-o`
+`--open`, `-o` `[id]`
 Open a gist in your browser
 
 `--starred`, `-s`

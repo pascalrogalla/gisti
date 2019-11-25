@@ -11,7 +11,12 @@ import github from "./lib/github"
 import { getHelp } from "./lib"
 const oktokit = github.getInstance()
 
-import { downloadGist, openGist, listGists } from "./lib/gist"
+import {
+  interactiveDownloadGist,
+  interactiveOpenGist,
+  openGist,
+  listGists
+} from "./lib/gist"
 
 clear()
 
@@ -39,6 +44,10 @@ const getGists = async () => {
   }
 }
 
+const getGist = async id => {
+  return oktokit.gists.get({ gist_id: id })
+}
+
 const run = async () => {
   let token = github.getStoredGithubToken()
 
@@ -55,18 +64,25 @@ const run = async () => {
 
   if (argv.d || argv.download) {
     let { data: gists } = await getGists()
-    downloadGist(gists)
+    interactiveDownloadGist(gists)
   }
   if (argv.l || argv.list) {
-    let { data: gists } = await getGists()
-    listGists(gists)
+    let { data: gist } = await getGists()
+    console.log(gist)
+    listGists(gist)
   }
   if (argv.search) {
     //TODO: Search
   }
   if (argv.o || argv.open) {
-    let { data: gists } = await getGists()
-    openGist(gists)
+    const open = argv.o || argv.open
+    if (typeof open !== "boolean") {
+      let { data: gist } = await getGist(open)
+      openGist(gist)
+    } else {
+      let { data: gists } = await getGists()
+      interactiveOpenGist(gists)
+    }
   }
   if (argv.v || argv.version) {
     console.log(chalk.green.bold(`gisti ${pkg.version} 🚀`))
