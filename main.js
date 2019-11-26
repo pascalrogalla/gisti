@@ -17,7 +17,8 @@ import {
   interactiveCopyGistId,
   interactiveSearchGist,
   openGist,
-  listGists
+  listGists,
+  searchGists
 } from "./lib/gist"
 
 clear()
@@ -65,8 +66,14 @@ const run = async () => {
   }
 
   if (argv.search) {
-    let { data: gists } = await getGists()
-    interactiveSearchGist(gists, getFunction())
+    const { data: gists } = await getGists()
+    let results = gists
+    if (typeof argv.search !== "boolean") {
+      results = searchGists(gists, argv.search)
+      getFunction()(results)
+      return
+    }
+    interactiveSearchGist(results, getFunction())
     return
   }
 
