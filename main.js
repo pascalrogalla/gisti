@@ -1,9 +1,11 @@
 import pkg from "./package.json"
-
 import clear from "clear"
-import chalk from "chalk"
-import figlet from "figlet"
 import minimist from "minimist"
+
+import figlet from "figlet"
+import chalk from "chalk"
+import lolcat from "lolcatjs"
+lolcat.options.seed = 744
 
 const argv = minimist(process.argv.slice(2))
 
@@ -22,17 +24,6 @@ import {
 } from "./lib/gist"
 
 clear()
-
-if (!argv.v && !argv.version && !argv.help) {
-  console.log(
-    chalk.yellow(
-      figlet.textSync("GISTI", {
-        font: "ANSI Shadow",
-        horizontalLayout: "full"
-      })
-    )
-  )
-}
 
 const getGists = async () => {
   if (argv.s || argv.starred) {
@@ -53,6 +44,17 @@ const getGist = async id => {
 
 const run = async () => {
   let token = github.getStoredGithubToken()
+
+  if (!token || argv.token) {
+    console.log(
+      lolcat.fromString(
+        figlet.textSync("Fond Of", {
+          font: "ANSI Shadow",
+          horizontalLayout: "full"
+        })
+      )
+    )
+  }
 
   if (argv.token) {
     github.setToken(argv.token)

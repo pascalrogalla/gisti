@@ -89,6 +89,10 @@ ansi-styles@^4.1.0:
     "@types/color-name" "^1.1.1"
     color-convert "^2.0.1"
 
+ansi@^0.3.0:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/ansi/-/ansi-0.3.1.tgz#0c42d4fb17160d5a9af1e484bace1c66922c1b21"
+
 arch@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/arch/-/arch-2.1.1.tgz#8f5c2731aa35a30929221bb0640eed65175ec84e"
@@ -105,7 +109,7 @@ btoa-lite@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/btoa-lite/-/btoa-lite-1.0.0.tgz#337766da15801210fdd956c22e9c6891ab9d0337"
 
-chalk@^2.4.2:
+chalk@^2.1.0, chalk@^2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
   dependencies:
@@ -336,6 +340,10 @@ figures@^3.0.0:
   dependencies:
     escape-string-regexp "^1.0.5"
 
+get-stdin@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/get-stdin/-/get-stdin-4.0.1.tgz#b968c6b0a04384324902e8bf1a5df32579a450fe"
+
 get-stream@^4.0.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/get-stream/-/get-stream-4.1.0.tgz#c1b255575f3dc21d59bfc79cd3d2b46b1c3a54b5"
@@ -420,6 +428,10 @@ isobject@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-4.0.0.tgz#3f1c9155e73b192022a80819bacd0343711697b0"
 
+line-by-line@^0.1.3:
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/line-by-line/-/line-by-line-0.1.6.tgz#6236edd1db2d1695addf11f0268e74a181561c30"
+
 lodash.get@^4.4.2:
   version "4.4.2"
   resolved "https://registry.yarnpkg.com/lodash.get/-/lodash.get-4.4.2.tgz#2d177f652fa31e939b4438d5341499dfa3825e99"
@@ -435,6 +447,19 @@ lodash.uniq@^4.5.0:
 lodash@^4.17.15:
   version "4.17.15"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
+
+lolcatjs@^2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/lolcatjs/-/lolcatjs-2.3.2.tgz#2d278f6ad36a344ede98cf25cd8a329751abc83c"
+  dependencies:
+    ansi "^0.3.0"
+    chalk "^2.1.0"
+    line-by-line "^0.1.3"
+    minimist "^1.1.1"
+    multiline "^1.0.2"
+    supports-color "^5.0.0"
+  optionalDependencies:
+    sleep "^5.0.0"
 
 lru-queue@0.1:
   version "0.1.0"
@@ -468,13 +493,23 @@ mimic-fn@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/mimic-fn/-/mimic-fn-2.1.0.tgz#7ed2c2ccccaf84d3ffcb7a69b57711fc2083401b"
 
-minimist@^1.2.0:
+minimist@^1.1.1, minimist@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.0.tgz#a35008b20f41383eec1fb914f4cd5df79a264284"
+
+multiline@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/multiline/-/multiline-1.0.2.tgz#69b1f25ff074d2828904f244ddd06b7d96ef6c93"
+  dependencies:
+    strip-indent "^1.0.0"
 
 mute-stream@0.0.8:
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.8.tgz#1630c42b2251ff81e2a283de96a5497ea92e5e0d"
+
+nan@>=2.12.1:
+  version "2.14.0"
+  resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.0.tgz#7818f722027b2459a86f0295d434d1fc2336c52c"
 
 next-tick@1, next-tick@~1.0.0:
   version "1.0.0"
@@ -591,6 +626,12 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
 
+sleep@^5.0.0:
+  version "5.2.4"
+  resolved "https://registry.yarnpkg.com/sleep/-/sleep-5.2.4.tgz#d1922209f61a1f29bc910495d406e3697dd730ec"
+  dependencies:
+    nan ">=2.12.1"
+
 string-width@^4.1.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.0.tgz#952182c46cc7b2c313d1596e623992bd163b72b5"
@@ -615,7 +656,13 @@ strip-eof@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/strip-eof/-/strip-eof-1.0.0.tgz#bb43ff5598a6eb05d89b59fcd129c983313606bf"
 
-supports-color@^5.3.0:
+strip-indent@^1.0.0:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/strip-indent/-/strip-indent-1.0.1.tgz#0c7962a6adefa7bbd4ac366460a638552ae1a0a2"
+  dependencies:
+    get-stdin "^4.0.1"
+
+supports-color@^5.0.0, supports-color@^5.3.0:
   version "5.5.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-5.5.0.tgz#e2e69a44ac8772f78a1ec0b35b689df6530efc8f"
   dependencies:
