@@ -44,7 +44,7 @@
     "gisti": "./index.js"
   },
   "directories": {
-    "src": "src"
+    "lib": "lib"
   },
   "devDependencies": {
     "eslint": "^6.7.2"
