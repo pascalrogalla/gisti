@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "lint": "eslint main.js ./src/**/*.js"
+    "lint": "eslint main.js ./lib/**/*.js",
+    "prepublish": "npm run man",
+    "man": "cd man && marked-man --version 'v1.0.0' --manual 'GISTI Help' --section 1 man.md > gisti.1"
   },
   "repository": {
     "type": "gist",
@@ -47,6 +49,8 @@
     "lib": "lib"
   },
   "devDependencies": {
-    "eslint": "^6.7.2"
+    "eslint": "^6.7.2",
+    "marked": "^0.7.0",
+    "marked-man": "^0.7.0"
   }
 }

@@ -1,17 +1,9 @@
 import pkg from "./package.json"
 import clear from "clear"
 import minimist from "minimist"
-
 import figlet from "figlet"
 import chalk from "chalk"
 import lolcat from "lolcatjs"
-lolcat.options.seed = 744
-
-const argv = minimist(process.argv.slice(2))
-
-import github from "./src/github"
-import { getHelp } from "./src/utils"
-const oktokit = github.getInstance()
 
 import {
   interactiveDownloadGist,
@@ -22,29 +14,18 @@ import {
   openGist,
   listGists,
   searchGists
-} from "./src/gist"
+} from "./lib/gist"
+import github from "./lib/github"
+import { getHelp } from "./lib/utils"
 
-clear()
+lolcat.options.seed = 744
+const argv = minimist(process.argv.slice(2))
+const oktokit = github.getInstance()
 
-const getGists = async () => {
-  if (argv.s || argv.starred) {
-    return oktokit.gists.listStarred()
-  } else if (argv.p || argv.private) {
-    const { data } = await oktokit.gists.list()
-    return Promise.resolve({
-      data: data.filter(({ public: p }) => p === false)
-    })
-  } else {
-    return oktokit.gists.list()
-  }
-}
+const checkToken = () => {
+  let success = !!github.getStoredGithubToken()
 
-const getGist = async id => oktokit.gists.get({ gist_id: id })
-
-const run = async () => {
-  const token = github.getStoredGithubToken()
-
-  if (!token || argv.token) {
+  if (!success || argv.token) {
     console.log(
       lolcat.fromString(
         figlet.textSync("Fond Of", {
@@ -57,12 +38,40 @@ const run = async () => {
 
   if (argv.token) {
     github.setToken(argv.token)
-    return
+    success = true
   }
 
-  if (!token) {
+  if (!success) {
     console.log(chalk.red.bold("Add your personal git access"))
     console.log("run gisti --token [token]")
+  }
+
+  return success
+}
+
+clear()
+
+const starred = argv.s || argv.starred
+const prvt = argv.p || argv.private
+
+const getGists = async () => {
+  if (starred) {
+    return oktokit.gists.listStarred()
+  } else if (prvt) {
+    const { data } = await oktokit.gists.list()
+    return Promise.resolve({
+      data: data.filter(({ public: p }) => p === false)
+    })
+  } else {
+    return oktokit.gists.list()
+  }
+}
+
+const getGist = async id => oktokit.gists.get({ gist_id: id })
+
+const run = async () => {
+  const checkSuccessfull = checkToken()
+  if (!checkSuccessfull) {
     return
   }
 

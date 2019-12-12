@@ -771,6 +771,14 @@ make-dir@^3.0.0:
   dependencies:
     semver "^6.0.0"
 
+marked-man@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/marked-man/-/marked-man-0.7.0.tgz#220ba01d275d16f1a98e4e7fc3c5eac0630c68e4"
+
+marked@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-0.7.0.tgz#b64201f051d271b1edc10a04d1ae9b74bb8e5c0e"
+
 memoizee@0.3.x:
   version "0.3.10"
   resolved "https://registry.yarnpkg.com/memoizee/-/memoizee-0.3.10.tgz#4eca0d8aed39ec9d017f4c5c2f2f6432f42e5c8f"
