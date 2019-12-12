@@ -7,59 +7,12 @@ import clipboardy from "clipboardy"
 
 import { textMatchSearchWords } from "./utils"
 
-const conditionalAdd = (condition, item) => (condition ? [item] : [])
-
-const getGistDownloadChoices = async gists => {
-  const gistFileList = gists.reduce((map, gist) => {
-    const fileList = Object.values(gist.files)
-
-    const newGists = [
-      new inquirer.Separator(
-        chalk
-          .rgb(184, 190, 202)
-          .bold(`${gist.description} - files: ${fileList.length}`)
-      ),
-      ...conditionalAdd(fileList.length > 1, {
-        name: chalk.rgb(0, 160, 200).bold(gist.id),
-        value: gist
-      }),
-      ...fileList.map(file => ({
-        name: `${file.filename}`,
-        value: { ...file, gistId: gist.id }
-      }))
-    ]
-    return [...map, ...newGists]
-  }, [])
-
-  return gistFileList
-}
-
-const getRawGistChoices = async gists => {
-  const gistList = gists.reduce((map, gist) => {
-    const newGists = [
-      {
-        name: `${chalk.rgb(184, 190, 202).bold(gist.id)} - ${gist.description}`,
-        value: gist
-      }
-    ]
-    return [...map, ...newGists]
-  }, [])
-
-  return gistList
-}
-
-const getGistPromptList = gists =>
-  gists.reduce((map, gist) => {
-    const fileList = Object.values(gist.files)
-
-    const bla = [
-      chalk
-        .rgb(184, 190, 202)
-        .bold(`${gist.id} - ${gist.description} - Files:${fileList.length}`),
-      ...fileList.map(file => `- ${file.filename}`)
-    ]
-    return [...map, ...bla]
-  }, [])
+import {
+  getGistDownloadChoices,
+  getRawFileChoices,
+  getRawGistChoices,
+  getGistPromptList
+} from "./choices"
 
 export const interactiveDownloadGist = async gists => {
   const choices = await getGistDownloadChoices(gists)
@@ -72,7 +25,7 @@ export const interactiveDownloadGist = async gists => {
         name: "gistsToDownload",
         pageSize: choices.length,
         choices,
-        validate: function(answer) {
+        validate: answer => {
           if (answer.length < 1) {
             return "You must choose at least one gist or file."
           }
@@ -108,7 +61,7 @@ export const interactiveOpenGist = async gists => {
         name: "gistToOpen",
         pageSize: choices.length,
         choices,
-        validate: function(answer) {
+        validate: answer => {
           if (answer.length < 1) {
             return "You must choose at least one gist or file."
           }
@@ -127,7 +80,7 @@ export const interactiveSearchGist = async (gists, listFunction) => {
         name: "searchString",
         type: "input",
         message: "Search:",
-        validate: function(value) {
+        validate: value => {
           if (value.length) {
             return true
           } else {
@@ -152,7 +105,7 @@ export const interactiveCopyGistId = async gists => {
         name: "gistToCopy",
         pageSize: choices.length,
         choices,
-        validate: function(answer) {
+        validate: answer => {
           if (answer.length < 1) {
             return "You must choose at least one gist or file."
           }
@@ -187,7 +140,7 @@ const handleFileDownload = (file, path = process.cwd()) => {
   const fileStream = fs.createWriteStream(`${path}/${fileName}`)
 
   return new Promise(resolve =>
-    https.get(file.raw_url, function(response) {
+    https.get(file.raw_url, response => {
       response.pipe(fileStream)
       console.log(chalk.green(`${fileName} downloaded`))
       resolve(file)
@@ -223,3 +176,32 @@ export const searchGists = (gists, searchString) =>
   gists.filter(({ id, description }) =>
     textMatchSearchWords(`${id} ${description}`, searchString.split(" "))
   )
+
+export const interactiveUpdateGist = async (gists, filePath) => {
+  fs.readFile(filePath, "utf8", async (err, fileContent) => {
+    const choices = await getRawFileChoices(gists)
+
+    inquirer
+      .prompt([
+        {
+          type: "list",
+          message: "Select gist to update",
+          name: "gistToUpdate",
+          pageSize: choices.length > 20 ? choices.length : 20,
+          choices,
+          validate: answer => {
+            if (answer.length !== 1) {
+              return "You must choose one file."
+            }
+
+            return true
+          }
+        }
+      ])
+      .then(({ gistToUpdate }) => handleUpdateGist(gistToUpdate, fileContent))
+  })
+}
+
+const handleUpdateGist = ({ gistId, filename }, fileContent) => {
+  console.log(gistId, filename, fileContent)
+}

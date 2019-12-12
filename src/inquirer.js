@@ -6,7 +6,7 @@ export const askGithubCredentials = () => {
       name: "username",
       type: "input",
       message: "Enter your GitHub username or e-mail address:",
-      validate: function(value) {
+      validate: value => {
         if (value.length) {
           return true
         } else {
@@ -18,7 +18,7 @@ export const askGithubCredentials = () => {
       name: "password",
       type: "password",
       message: "Enter your password:",
-      validate: function(value) {
+      validate: value => {
         if (value.length) {
           return true
         } else {
@@ -36,7 +36,7 @@ export const search = () => {
       name: "searchString",
       type: "input",
       message: "Search:",
-      validate: function(value) {
+      validate: value => {
         if (value.length) {
           return true
         } else {

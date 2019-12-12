@@ -9,8 +9,8 @@ lolcat.options.seed = 744
 
 const argv = minimist(process.argv.slice(2))
 
-import github from "./lib/github"
-import { getHelp } from "./lib/utils"
+import github from "./src/github"
+import { getHelp } from "./src/utils"
 const oktokit = github.getInstance()
 
 import {
@@ -18,10 +18,11 @@ import {
   interactiveOpenGist,
   interactiveCopyGistId,
   interactiveSearchGist,
+  interactiveUpdateGist,
   openGist,
   listGists,
   searchGists
-} from "./lib/gist"
+} from "./src/gist"
 
 clear()
 
@@ -38,12 +39,10 @@ const getGists = async () => {
   }
 }
 
-const getGist = async id => {
-  return oktokit.gists.get({ gist_id: id })
-}
+const getGist = async id => oktokit.gists.get({ gist_id: id })
 
 const run = async () => {
-  let token = github.getStoredGithubToken()
+  const token = github.getStoredGithubToken()
 
   if (!token || argv.token) {
     console.log(
@@ -67,8 +66,9 @@ const run = async () => {
     return
   }
 
+  const { data: gists } = await getGists()
+
   if (argv.search) {
-    const { data: gists } = await getGists()
     let results = gists
     if (typeof argv.search !== "boolean") {
       results = searchGists(gists, argv.search)
@@ -80,31 +80,43 @@ const run = async () => {
   }
 
   if (argv.d || argv.download) {
-    let { data: gists } = await getGists()
     interactiveDownloadGist(gists)
     return
   }
   if (argv.l || argv.list) {
-    let { data: gist } = await getGists()
-    listGists(gist)
+    listGists(gists)
     return
   }
   if (argv.c || argv.copy) {
-    let { data: gists } = await getGists()
     interactiveCopyGistId(gists)
     return
   }
   if (argv.o || argv.open) {
     const open = argv.o || argv.open
     if (typeof open !== "boolean") {
-      let { data: gist } = await getGist(open)
+      const { data: gist } = await getGist(open)
       openGist(gist)
     } else {
-      let { data: gists } = await getGists()
       interactiveOpenGist(gists)
     }
     return
   }
+  if ((argv.u || argv.update) && (argv.f || argv.file)) {
+    const filePath = argv.f || argv.file
+    interactiveUpdateGist(gists, filePath)
+    //   console.log(file)
+
+    //   if (file) {
+    //     const { data: gists } = await getGists()
+    //     const results = gists
+    //     if (typeof update !== "boolean") {
+    //       results = searchGists(gists, update)
+    //     }
+    //     console.log(results)
+    //     //interactiveUpdateGist(result, file)
+    //   }
+  }
+
   if (argv.v || argv.version) {
     console.log(chalk.green.bold(`gisti ${pkg.version} 🚀`))
   }
