@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node index.js",
+    "lint": "eslint main.js ./src/**/*.js"
   },
   "repository": {
     "type": "gist",
@@ -43,6 +44,9 @@
     "gisti": "./index.js"
   },
   "directories": {
-    "lib": "lib"
+    "src": "src"
+  },
+  "devDependencies": {
+    "eslint": "^6.7.2"
   }
 }
