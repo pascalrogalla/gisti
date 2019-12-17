@@ -12,8 +12,6 @@ To learn more, visit [https://github.com/pascalrogalla/gisti](https://github.com
 
 Gisti is a command line tool that supports interactive gist handling in your terminal.
 
-## WHY?
-
 ## Website
 
 [https://github.com/pascalrogalla/gisti](https://github.com/pascalrogalla/gisti)
@@ -62,7 +60,7 @@ Add your github personal token
 
 ## BUGS
 
-Please report any bugs to https://github.com/pascalrogalla/gisti/issues
+Please report any bugs to https://github.com/pascalrogalla/gisti.
 
 ## LICENSE
 

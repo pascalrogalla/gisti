@@ -34,6 +34,7 @@
     "clear": "^0.1.0",
     "clipboardy": "^2.1.0",
     "clui": "^0.3.6",
+    "commander": "^4.0.1",
     "configstore": "^5.0.0",
     "esm": "^3.2.25",
     "figlet": "^1.2.4",
@@ -52,5 +53,13 @@
     "eslint": "^6.7.2",
     "marked": "^0.7.0",
     "marked-man": "^0.7.0"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "semi": false,
+    "jsxBracketSameLine": false,
+    "bracketSpacing": true
   }
 }
