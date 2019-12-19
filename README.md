@@ -72,4 +72,6 @@ Copyright (c) 2019, Pascal Rogalla (MIT License).
 
 https://github.com/defunkt/gist
 
+https://github.com/jdowner/gist
+
 https://github.com/jrbasso/gistit/

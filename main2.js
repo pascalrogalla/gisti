@@ -54,8 +54,9 @@ program
   .command('list')
   .alias('ls')
   .description('List your gists')
-  .option('-p, --private', 'List private Gists', false)
+  .option('-x, --private', 'List private Gists', false)
   .option('-s, --starred', 'List starred Gists', false)
+  .option('-p, --public', 'List starred Gists', false)
   .action(({ starred, private: isPrivate }) =>
     executeIfAuthorized(() => {
       getPrivateOrStarredGists(starred, isPrivate).then(gists => {
@@ -68,8 +69,9 @@ program
   .command('copy')
   .alias('cp')
   .description('Copy the id of a gist to clipboard')
-  .option('-p, --private', 'List private Gists', false)
+  .option('-x, --private', 'List private Gists', false)
   .option('-s, --starred', 'List starred Gists', false)
+  .option('-p, --public', 'List starred Gists', false)
   .action(({ starred, private: isPrivate }) =>
     executeIfAuthorized(() => {
       console.log(starred, isPrivate)
@@ -84,8 +86,9 @@ program
   .alias('opn')
   .description('')
   .option('--id <id>', 'Gist id for non-interactive update')
-  .option('-p, --private', 'List private Gists', false)
+  .option('-x, --private', 'List private Gists', false)
   .option('-s, --starred', 'List starred Gists', false)
+  .option('-p, --public', 'List starred Gists', false)
   .action((id, { id: optId, starred, private: isPrivate }) =>
     executeIfAuthorized(() => {
       console.log(starred, isPrivate)
@@ -112,7 +115,8 @@ program
   .command('create <files...>')
   .alias('c')
   .description('')
-  .option('-p, --private', 'Create private Gist', true)
+  .option('-x, --private', 'Create private Gist', true)
+  .option('-p, --public', 'List starred Gists', false)
   .option('-d, --description <description>', 'Set the gist description')
   .action((filesPaths, { private: isPrivate, description }) =>
     executeIfAuthorized(() => {
@@ -131,7 +135,8 @@ program
   .command('update [file] [id]')
   .alias('up')
   .description('')
-  .option('-p, --private', 'Make Gist private', false)
+  .option('-x, --private', 'Make Gist private', false)
+  .option('-p, --public', 'List starred Gists', false)
   .option('--id <id>', 'Gist id for non-interactive update')
   .action((file, id, { private: isPrivate, id: optId }) =>
     executeIfAuthorized(() => {
@@ -145,15 +150,13 @@ program
 program
   .command('add  <files...>')
   .description('')
-  .option('-p, --private', 'Make Gist private', false)
   .option('--id <id>', 'Gist id for non-interactive add')
   .option('-d, --description <description>', 'Set the gist description')
-  .action((files, { private: isPrivate, id }) =>
+  .action((files, { id }) =>
     executeIfAuthorized(() => {
       const result = getFileContents(files)
       console.log(result)
       console.log('files', files)
-      console.log('Private', isPrivate)
       console.log('Id', id)
     })
   )
@@ -163,8 +166,9 @@ program
   .alias('dl')
   .description('')
   .option('--id <id>', 'Gist id')
-  .option('-p, --private', 'Make Gist private', false)
+  .option('-x, --private', 'Make Gist private', false)
   .option('-s, --starred', 'Search your starred gists', false)
+  .option('-p, --public', 'List starred Gists', false)
   .action((id, { private: isPrivate, id: optId, starred }) =>
     executeIfAuthorized(() => {
       const id = id || optId
@@ -209,15 +213,29 @@ program
   .alias('rm')
   .description('')
   .option('--id <id>', 'Gist id')
-  .option('-p, --private', 'Delete private private gists', false)
-  .action((id, { id: optId, private: isPrivate }) =>
+  .action((id, { id: optId }) =>
     executeIfAuthorized(() => {
-      console.log(isPrivate)
       id = id || optId
       if (id) {
         console.log('Id', id)
       } else {
         //interactiveDeleteGist
+      }
+    })
+  )
+
+program
+  .command('content [id] <files...>')
+  .alias('gc')
+  .description('stdout the gist content')
+  .option('--id <id>', 'Gist id')
+  .action((id, files, { id: optId }) =>
+    executeIfAuthorized(() => {
+      id = id || optId
+      if (id) {
+        console.log('Id', id)
+      } else {
+        //interactiveOutputContent
       }
     })
   )
