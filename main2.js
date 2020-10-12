@@ -171,18 +171,13 @@ program
   .option('-p, --public', 'List starred Gists', false)
   .action((id, { private: isPrivate, id: optId, starred }) =>
     executeIfAuthorized(() => {
-      const id = id || optId
+      id = id || optId
       if (id) {
         console.log(`TODO: Download gist with id ${id}`)
       } else {
-        if (id) {
-          console.log(id)
-          //download gist
-        } else {
-          getPrivateOrStarredGists(starred, isPrivate).then(gists => {
-            interactiveDownloadGist(gists)
-          })
-        }
+        getPrivateOrStarredGists(starred, isPrivate).then(gists => {
+          interactiveDownloadGist(gists)
+        })
       }
     })
   )

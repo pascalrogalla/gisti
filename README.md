@@ -1,6 +1,6 @@
 # GISTI
 
-> GISTI - The interactive CLI for gist
+> GistI(nteractive) - The interactive CLI for gist
 
 To learn more, visit [https://github.com/pascalrogalla/gisti](https://github.com/pascalrogalla/gisti)
 
@@ -18,9 +18,17 @@ Gisti is a command line tool that supports interactive gist handling in your ter
 
 [https://github.com/pascalrogalla/gisti](https://github.com/pascalrogalla/gisti)
 
-## EXAMPLES
+## Install
 
-`npm install gisti -g`
+### npm
+
+`npm install -g gist`
+
+### yarn
+
+`yarn global add gisti`
+
+## EXAMPLES
 
 `gisti -l`
 
