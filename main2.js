@@ -78,10 +78,11 @@ program
   .option('-x, --private', 'List private Gists', false)
   .option('-s, --starred', 'List starred Gists', false)
   .option('-p, --public', 'List public Gists', false)
-  .action(({ starred, private: isPrivate }) =>
+  .option('-f, --files', 'List files of Gist', false)
+  .action(({ starred, private: isPrivate, files: withFiles }) =>
     executeIfAuthorized(() => {
       getPrivateOrStarredGists(starred, isPrivate).then((gists) => {
-        listGists(gists)
+        listGists(gists, withFiles)
       })
     })
   )
