@@ -17,6 +17,7 @@ import {
   openGist,
   listGists,
   updateGist,
+  downloadGist,
   interactiveDeleteGist,
 } from './lib/gist'
 
@@ -43,6 +44,14 @@ const updateGistById = (id, filePath) => {
     updateGist(gist, fileContent)
   })
 }
+
+const getFileContents = (filePaths) =>
+  filePaths.reduce((files, path) => {
+    const parts = path.split('/')
+    const filename = parts[parts.length - 1]
+    const content = fs.readFileSync(path, 'utf8')
+    return { ...files, [filename]: { content } }
+  }, {})
 
 const getFunction = ({ list, copy, open, download }) => {
   if (download) {
@@ -100,7 +109,6 @@ program
   .option('-p, --public', 'List public Gists', false)
   .action((id, { id: optId, starred, private: isPrivate }) =>
     executeIfAuthorized(() => {
-      console.log(starred, isPrivate)
       getPrivateOrStarredGists(starred, isPrivate).then((gists) => {
         id = id || optId
         if (id) {
@@ -112,14 +120,6 @@ program
     })
   )
 
-const getFileContents = (filePaths) =>
-  filePaths.reduce((files, path) => {
-    const parts = path.split('/')
-    const filename = parts[parts.length - 1]
-    const content = fs.readFileSync(path, 'utf8')
-    return { ...files, [filename]: { content } }
-  }, {})
-
 program
   .command('create <files...>')
   .description('')
@@ -128,7 +128,6 @@ program
   .option('-d, --description <description>', 'Set the gist description')
   .action((filesPaths, { private: isPrivate, description }) =>
     executeIfAuthorized(() => {
-      console.log(isPrivate)
       const files = getFileContents(filesPaths)
       const gist = {
         description,
@@ -156,7 +155,6 @@ program
         })
       }
 
-      id = id || optId
       console.log('file', filePath)
       console.log('Private', isPrivate)
       console.log('Id', id)
@@ -185,10 +183,11 @@ program
   .option('-s, --starred', 'Search your starred gists', false)
   .option('-p, --public', 'List starred Gists', false)
   .action((id, { private: isPrivate, id: optId, starred }) =>
-    executeIfAuthorized(() => {
+    executeIfAuthorized(async () => {
       id = id || optId
       if (id) {
-        console.log(`TODO: Download gist with id ${id}`)
+        const { data: gist } = await getGist(id)
+        downloadGist(gist)
       } else {
         getPrivateOrStarredGists(starred, isPrivate).then((gists) => {
           interactiveDownloadGist(gists)
@@ -221,7 +220,6 @@ program
   .command('delete [id]')
   .description('')
   .option('-x, --private', 'Make Gist private', false)
-  .option('-s, --starred', 'Search your starred gists', false)
   .option('-p, --public', 'List starred Gists', false)
   .action((id, { private: isPrivate, id: optId, starred }) =>
     executeIfAuthorized(() => {
