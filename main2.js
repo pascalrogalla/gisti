@@ -13,19 +13,35 @@ import {
   interactiveOpenGist,
   interactiveCopyGistId,
   interactiveSearchGist,
-  //interactiveUpdateGist,
+  interactiveUpdateGist,
   openGist,
   listGists,
+  updateGist,
+  interactiveDeleteGist,
 } from './lib/gist'
 
-import { createGist, getGist, getPrivateOrStarredGists, getGistsByQuery } from './lib/api'
+import {
+  createGist,
+  getGist,
+  getPrivateOrStarredGists,
+  getGistsByQuery,
+  deleteGist,
+} from './lib/api'
 
 import { executeIfAuthorized, executeIfNotAuthorized } from './lib/utils'
+import { confirmDelete } from './lib/inquirer'
 
-const openGistById = async id => {
+const openGistById = async (id) => {
   const gist = await getGist(id)
   openGist(gist)
   return Promise.resolve()
+}
+
+const updateGistById = (id, filePath) => {
+  fs.readFile(filePath, 'utf8', async (err, fileContent) => {
+    const gist = await getGist(id)
+    updateGist(gist, fileContent)
+  })
 }
 
 const getFunction = ({ list, copy, open, download }) => {
@@ -45,21 +61,17 @@ const getFunction = ({ list, copy, open, download }) => {
   return listGists
 }
 
-program
-  .name('gisti')
-  .description('GISTI - The interactive CLI for gist')
-  .version(pkg.version)
+program.name('gisti').description('GISTI - The interactive CLI for gist').version(pkg.version)
 
 program
   .command('list')
-  .alias('ls')
   .description('List your gists')
   .option('-x, --private', 'List private Gists', false)
   .option('-s, --starred', 'List starred Gists', false)
-  .option('-p, --public', 'List starred Gists', false)
+  .option('-p, --public', 'List public Gists', false)
   .action(({ starred, private: isPrivate }) =>
     executeIfAuthorized(() => {
-      getPrivateOrStarredGists(starred, isPrivate).then(gists => {
+      getPrivateOrStarredGists(starred, isPrivate).then((gists) => {
         listGists(gists)
       })
     })
@@ -67,15 +79,13 @@ program
 
 program
   .command('copy')
-  .alias('cp')
   .description('Copy the id of a gist to clipboard')
   .option('-x, --private', 'List private Gists', false)
   .option('-s, --starred', 'List starred Gists', false)
-  .option('-p, --public', 'List starred Gists', false)
+  .option('-p, --public', 'List public Gists', false)
   .action(({ starred, private: isPrivate }) =>
     executeIfAuthorized(() => {
-      console.log(starred, isPrivate)
-      getPrivateOrStarredGists(starred, isPrivate).then(gists => {
+      getPrivateOrStarredGists(starred, isPrivate).then((gists) => {
         interactiveCopyGistId(gists)
       })
     })
@@ -83,16 +93,15 @@ program
 
 program
   .command('open [id]')
-  .alias('opn')
   .description('')
   .option('--id <id>', 'Gist id for non-interactive update')
   .option('-x, --private', 'List private Gists', false)
   .option('-s, --starred', 'List starred Gists', false)
-  .option('-p, --public', 'List starred Gists', false)
+  .option('-p, --public', 'List public Gists', false)
   .action((id, { id: optId, starred, private: isPrivate }) =>
     executeIfAuthorized(() => {
       console.log(starred, isPrivate)
-      getPrivateOrStarredGists(starred, isPrivate).then(gists => {
+      getPrivateOrStarredGists(starred, isPrivate).then((gists) => {
         id = id || optId
         if (id) {
           openGistById(id)
@@ -103,7 +112,7 @@ program
     })
   )
 
-const getFileContents = filePaths =>
+const getFileContents = (filePaths) =>
   filePaths.reduce((files, path) => {
     const parts = path.split('/')
     const filename = parts[parts.length - 1]
@@ -113,10 +122,9 @@ const getFileContents = filePaths =>
 
 program
   .command('create <files...>')
-  .alias('c')
   .description('')
   .option('-x, --private', 'Create private Gist', true)
-  .option('-p, --public', 'List starred Gists', false)
+  .option('-p, --public', 'Create public Gists', false)
   .option('-d, --description <description>', 'Set the gist description')
   .action((filesPaths, { private: isPrivate, description }) =>
     executeIfAuthorized(() => {
@@ -132,16 +140,24 @@ program
   )
 
 program
-  .command('update [file] [id]')
-  .alias('up')
+  .command('update [filePath] [id]')
   .description('')
   .option('-x, --private', 'Make Gist private', false)
-  .option('-p, --public', 'List starred Gists', false)
+  .option('-p, --public', 'List public Gists', false)
   .option('--id <id>', 'Gist id for non-interactive update')
-  .action((file, id, { private: isPrivate, id: optId }) =>
+  .action((filePath, id, { private: isPrivate, id: optId }) =>
     executeIfAuthorized(() => {
       id = id || optId
-      console.log('file', file)
+      if (id) {
+        updateGistById(id, filePath)
+      } else {
+        getPrivateOrStarredGists(false, isPrivate).then((gists) => {
+          interactiveUpdateGist(gists, filePath)
+        })
+      }
+
+      id = id || optId
+      console.log('file', filePath)
       console.log('Private', isPrivate)
       console.log('Id', id)
     })
@@ -163,7 +179,6 @@ program
 
 program
   .command('download [id]')
-  .alias('dl')
   .description('')
   .option('--id <id>', 'Gist id')
   .option('-x, --private', 'Make Gist private', false)
@@ -175,7 +190,7 @@ program
       if (id) {
         console.log(`TODO: Download gist with id ${id}`)
       } else {
-        getPrivateOrStarredGists(starred, isPrivate).then(gists => {
+        getPrivateOrStarredGists(starred, isPrivate).then((gists) => {
           interactiveDownloadGist(gists)
         })
       }
@@ -184,7 +199,6 @@ program
 
 program
   .command('search [query]')
-  .alias('s')
   .description('')
   .option('-l, --list', 'List search result')
   .option('-c, --copy', 'Copy the id of one resulted gist')
@@ -193,7 +207,7 @@ program
   .action((query, { list, copy, open, download }) =>
     executeIfAuthorized(() => {
       const action = getFunction({ list, copy, open, download })
-      getGistsByQuery(query).then(gists => {
+      getGistsByQuery(query).then((gists) => {
         if (query) {
           action(gists)
         } else {
@@ -205,23 +219,29 @@ program
 
 program
   .command('delete [id]')
-  .alias('rm')
   .description('')
-  .option('--id <id>', 'Gist id')
-  .action((id, { id: optId }) =>
+  .option('-x, --private', 'Make Gist private', false)
+  .option('-s, --starred', 'Search your starred gists', false)
+  .option('-p, --public', 'List starred Gists', false)
+  .action((id, { private: isPrivate, id: optId, starred }) =>
     executeIfAuthorized(() => {
       id = id || optId
       if (id) {
-        console.log('Id', id)
+        confirmDelete().then(({ continueDelete }) => {
+          if (continueDelete) {
+            deleteGist(id)
+          }
+        })
       } else {
-        //interactiveDeleteGist
+        getPrivateOrStarredGists(starred, isPrivate).then((gists) => {
+          interactiveDeleteGist(gists)
+        })
       }
     })
   )
 
 program
   .command('content [id] <files...>')
-  .alias('gc')
   .description('stdout the gist content')
   .option('--id <id>', 'Gist id')
   .action((id, files, { id: optId }) =>
