@@ -42,9 +42,9 @@ export const getStarredGists = async () => {
   return gists
 }
 
-export const getGist = id => octokit.gists.get({ gist_id: id })
+export const getGist = (id) => octokit.gists.get({ gist_id: id })
 
-export const getGistsByQuery = async query => {
+export const getGistsByQuery = async (query) => {
   const gists = await getGists()
   if (query) {
     return gists.filter(({ id, description }) =>
@@ -55,7 +55,7 @@ export const getGistsByQuery = async query => {
   }
 }
 
-export const createGist = gist => octokit.gists.create(gist)
+export const createGist = (gist) => octokit.gists.create(gist)
 
 export const updateGist = (id, files, description) => {
   console.log(files, id)
@@ -66,7 +66,7 @@ export const updateGist = (id, files, description) => {
   })
 }
 
-export const deleteGist = id =>
+export const deleteGist = (id) =>
   octokit.gists.delete({
     gist_id: id,
   })

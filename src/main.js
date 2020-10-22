@@ -1,4 +1,4 @@
-import pkg from './package.json'
+import pkg from '../package.json'
 import clear from 'clear'
 import program from 'commander'
 import fs from 'fs'
@@ -6,7 +6,7 @@ import fs from 'fs'
 import lolcat from 'lolcatjs'
 lolcat.options.seed = 744
 
-import github from './lib/github'
+import github from './github'
 
 import {
   interactiveDownloadGist,
@@ -19,18 +19,12 @@ import {
   updateGist,
   downloadGist,
   interactiveDeleteGist,
-} from './lib/gist'
+} from './gist'
 
-import {
-  createGist,
-  getGist,
-  getPrivateOrStarredGists,
-  getGistsByQuery,
-  deleteGist,
-} from './lib/api'
+import { createGist, getGist, getPrivateOrStarredGists, getGistsByQuery, deleteGist } from './api'
 
-import { executeIfAuthorized, executeIfNotAuthorized } from './lib/utils'
-import { confirmDelete } from './lib/inquirer'
+import { executeIfAuthorized, executeIfNotAuthorized } from './utils'
+import { confirmDelete } from './inquirer'
 
 const openGistById = async (id) => {
   const gist = await getGist(id)

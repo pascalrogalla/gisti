@@ -5,9 +5,9 @@ import lolcat from 'lolcatjs'
 import github from './github'
 
 export const textMatchSearchWords = (text, searchTermWords) =>
-  searchTermWords.every(term => text.match(new RegExp(term, 'i')))
+  searchTermWords.every((term) => text.match(new RegExp(term, 'i')))
 
-export const executeIfAuthorized = action => {
+export const executeIfAuthorized = (action) => {
   const authorized = !!github.getStoredGithubToken()
   if (authorized) {
     action()
@@ -18,7 +18,7 @@ export const executeIfAuthorized = action => {
   }
 }
 
-export const executeIfNotAuthorized = action => {
+export const executeIfNotAuthorized = (action) => {
   const authorized = !!github.getStoredGithubToken()
   if (!authorized) {
     action()
