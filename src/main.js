@@ -1,7 +1,7 @@
 import pkg from '../package.json'
-import clear from 'clear'
 import program from 'commander'
-import fs from 'fs'
+
+import terminalLink from 'terminal-link'
 
 import lolcat from 'lolcatjs'
 lolcat.options.seed = 744
@@ -13,39 +13,20 @@ import {
   interactiveOpenGist,
   interactiveCopyGistId,
   interactiveSearchGist,
-  interactiveUpdateGist,
-  openGist,
-  listGists,
-  updateGist,
-  downloadGist,
   interactiveDeleteGist,
-} from './gist'
+} from './interactiveHandler'
 
 import { createGist, getGist, getPrivateOrStarredGists, getGistsByQuery, deleteGist } from './api'
 
-import { executeIfAuthorized, executeIfNotAuthorized } from './utils'
-import { confirmDelete } from './inquirer'
+import { executeIfAuthorized, openGist, listGists, downloadGist, getFileContents } from './utils'
+import { promptConfirmDelete, promptAccessToken } from './prompt'
+import chalk from 'chalk'
 
 const openGistById = async (id) => {
-  const gist = await getGist(id)
+  const { data: gist } = await getGist(id)
   openGist(gist)
   return Promise.resolve()
 }
-
-const updateGistById = (id, filePath) => {
-  fs.readFile(filePath, 'utf8', async (err, fileContent) => {
-    const gist = await getGist(id)
-    updateGist(gist, fileContent)
-  })
-}
-
-const getFileContents = (filePaths) =>
-  filePaths.reduce((files, path) => {
-    const parts = path.split('/')
-    const filename = parts[parts.length - 1]
-    const content = fs.readFileSync(path, 'utf8')
-    return { ...files, [filename]: { content } }
-  }, {})
 
 const getFunction = ({ list, copy, open, download }) => {
   if (download) {
@@ -67,6 +48,26 @@ const getFunction = ({ list, copy, open, download }) => {
 program.name('gisti').description('GISTI - The interactive CLI for gist').version(pkg.version)
 
 program
+  .command('auth [token]')
+  .description('Set/Update personal access token')
+  .option('-t, --token <token>', 'Set token')
+  .action(async (token, { token: optToken }) => {
+    token = token || optToken
+    if (token) {
+      github.setToken(token)
+    } else {
+      const link = terminalLink(
+        'https://github.com/settings/tokens',
+        'https://github.com/settings/tokens/new?description=GISTI&scopes=gist',
+        { fallback: (text) => text }
+      )
+      console.log(`Create a new personal access token at: ${chalk.rgb(0, 160, 200).bold(link)}`)
+      const { token } = await promptAccessToken()
+      github.setToken(token)
+    }
+  })
+
+program
   .command('list')
   .description('List your gists')
   .option('-x, --private', 'List private Gists', false)
@@ -74,10 +75,9 @@ program
   .option('-p, --public', 'List public Gists', false)
   .option('-f, --files', 'List files of Gist', false)
   .action(({ starred, private: isPrivate, files: withFiles }) =>
-    executeIfAuthorized(() => {
-      getPrivateOrStarredGists(starred, isPrivate).then((gists) => {
-        listGists(gists, withFiles)
-      })
+    executeIfAuthorized(async () => {
+      const gists = await getPrivateOrStarredGists(starred, isPrivate)
+      listGists(gists, withFiles)
     })
   )
 
@@ -88,10 +88,9 @@ program
   .option('-s, --starred', 'List starred Gists', false)
   .option('-p, --public', 'List public Gists', false)
   .action(({ starred, private: isPrivate }) =>
-    executeIfAuthorized(() => {
-      getPrivateOrStarredGists(starred, isPrivate).then((gists) => {
-        interactiveCopyGistId(gists)
-      })
+    executeIfAuthorized(async () => {
+      const gists = await getPrivateOrStarredGists(starred, isPrivate)
+      interactiveCopyGistId(gists)
     })
   )
 
@@ -103,15 +102,14 @@ program
   .option('-s, --starred', 'List starred Gists', false)
   .option('-p, --public', 'List public Gists', false)
   .action((id, { id: optId, starred, private: isPrivate }) =>
-    executeIfAuthorized(() => {
-      getPrivateOrStarredGists(starred, isPrivate).then((gists) => {
-        id = id || optId
-        if (id) {
-          openGistById(id)
-        } else {
-          interactiveOpenGist(gists)
-        }
-      })
+    executeIfAuthorized(async () => {
+      id = id || optId
+      if (id) {
+        openGistById(id)
+      } else {
+        const gists = await getPrivateOrStarredGists(starred, isPrivate)
+        interactiveOpenGist(gists)
+      }
     })
   )
 
@@ -134,29 +132,6 @@ program
   )
 
 program
-  .command('update [filePath] [id]')
-  .description('')
-  .option('-x, --private', 'Make Gist private', false)
-  .option('-p, --public', 'List public Gists', false)
-  .option('--id <id>', 'Gist id for non-interactive update')
-  .action((filePath, id, { private: isPrivate, id: optId }) =>
-    executeIfAuthorized(() => {
-      id = id || optId
-      if (id) {
-        updateGistById(id, filePath)
-      } else {
-        getPrivateOrStarredGists(false, isPrivate).then((gists) => {
-          interactiveUpdateGist(gists, filePath)
-        })
-      }
-
-      console.log('file', filePath)
-      console.log('Private', isPrivate)
-      console.log('Id', id)
-    })
-  )
-
-program
   .command('add  <files...>')
   .description('')
   .option('--id <id>', 'Gist id for non-interactive add')
@@ -167,6 +142,7 @@ program
       console.log(result)
       console.log('files', files)
       console.log('Id', id)
+      //TODO: Add file to gist
     })
   )
 
@@ -184,9 +160,8 @@ program
         const { data: gist } = await getGist(id)
         downloadGist(gist)
       } else {
-        getPrivateOrStarredGists(starred, isPrivate).then((gists) => {
-          interactiveDownloadGist(gists)
-        })
+        const gists = await getPrivateOrStarredGists(starred, isPrivate)
+        interactiveDownloadGist(gists)
       }
     })
   )
@@ -199,15 +174,16 @@ program
   .option('-o, --open', 'Open one resulted gist in browser')
   .option('-d, --download', 'Download resulted gists')
   .action((query, { list, copy, open, download }) =>
-    executeIfAuthorized(() => {
+    executeIfAuthorized(async () => {
       const action = getFunction({ list, copy, open, download })
-      getGistsByQuery(query).then((gists) => {
-        if (query) {
-          action(gists)
-        } else {
-          interactiveSearchGist(gists, action)
-        }
-      })
+
+      if (query) {
+        const gists = await getGistsByQuery(query)
+        action(gists)
+      } else {
+        const gists = await interactiveSearchGist()
+        action(gists)
+      }
     })
   )
 
@@ -217,43 +193,26 @@ program
   .option('-x, --private', 'Make Gist private', false)
   .option('-p, --public', 'List starred Gists', false)
   .action((id, { private: isPrivate, id: optId, starred }) =>
-    executeIfAuthorized(() => {
+    executeIfAuthorized(async () => {
       id = id || optId
       if (id) {
-        confirmDelete().then(({ continueDelete }) => {
-          if (continueDelete) {
-            deleteGist(id)
-          }
-        })
+        const { continueDelete } = await promptConfirmDelete()
+        if (continueDelete) {
+          deleteGist(id)
+        }
       } else {
-        getPrivateOrStarredGists(starred, isPrivate).then((gists) => {
-          interactiveDeleteGist(gists)
-        })
+        const gists = await getPrivateOrStarredGists(starred, isPrivate)
+        interactiveDeleteGist(gists)
       }
     })
   )
 
-program
-  .command('content [id] <files...>')
-  .description('stdout the gist content')
-  .option('--id <id>', 'Gist id')
-  .action((id, files, { id: optId }) =>
-    executeIfAuthorized(() => {
-      id = id || optId
-      if (id) {
-        console.log('Id', id)
-      } else {
-        //interactiveOutputContent
-      }
-    })
-  )
+// TODO: Implement content handling
+// TODO: Implement Update functionality
 
 const run = () => {
-  clear()
+  // clear()
   program.parse(process.argv)
-  if (program.token) {
-    executeIfNotAuthorized(() => github.setToken(program.token))
-  }
 }
 
 run()

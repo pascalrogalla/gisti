@@ -1,7 +1,6 @@
 import inquirer from 'inquirer'
 import chalk from 'chalk'
-
-const conditionalAdd = (condition, item) => (condition ? [item] : [])
+import { conditionalAdd } from './utils'
 
 export const getGistDownloadChoices = async (gists) => {
   const gistFileList = gists.reduce((map, gist) => {
@@ -56,19 +55,3 @@ export const getRawGistChoices = async (gists) => {
 
   return gistList
 }
-
-export const getGistPromptList = (gists, withFiles = false) =>
-  gists.reduce((map, gist) => {
-    const fileList = Object.values(gist.files)
-    const bla = [
-      chalk
-        .rgb(184, 190, 202)
-        .bold(
-          `${gist.id} - ${gist.description} - Files:${fileList.length}${
-            gist.public ? '' : chalk.rgb(236, 98, 113)(' [Private]')
-          }`
-        ),
-      ...conditionalAdd(withFiles, ...fileList.map((file) => `- ${file.filename}`)),
-    ]
-    return [...map, ...bla]
-  }, [])

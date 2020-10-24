@@ -82,4 +82,4 @@ https://github.com/defunkt/gist
 
 https://github.com/jdowner/gist
 
-https://github.com/jrbasso/gistit/
+https://github.com/jrbasso/gistit

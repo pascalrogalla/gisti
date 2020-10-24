@@ -1,6 +1,11 @@
+import https from 'https'
+import fs from 'fs'
 import chalk from 'chalk'
 import figlet from 'figlet'
 import lolcat from 'lolcatjs'
+
+import opn from 'opn'
+import clipboardy from 'clipboardy'
 
 import github from './github'
 
@@ -14,7 +19,11 @@ export const executeIfAuthorized = (action) => {
   } else {
     printHeader()
     console.log(chalk.red.bold('Set your personal github access token'))
-    console.log(`run ${chalk.rgb(0, 160, 200).bold('gisti --token <token>')}`)
+    console.log(
+      `run ${chalk.rgb(0, 160, 200).bold('gisti auth')} or ${chalk
+        .rgb(0, 160, 200)
+        .bold('gisti auth --token <token>')}`
+    )
   }
 }
 
@@ -34,33 +43,71 @@ const printHeader = () => {
   )
 }
 
-export const getHelp = () => `
-${chalk.bold('Usage')}
-gisti [-l, --list] [-d, --download] [-o, --open] [-s, --starred] [-p, --private] [-v] [-h]
+export const conditionalAdd = (condition, item) => (condition ? [item] : [])
 
-${chalk.bold('Arguments')}
---list, -i
-List your gists
+const createFolderIfNotExist = (path) => {
+  if (!fs.existsSync(path)) {
+    fs.mkdirSync(path)
+  }
+}
 
---download, -d
-Download a gist
+export const downloadGistFile = (file, path = process.cwd()) => {
+  const fileName = file.gistId ? `${file.gistId}_${file.filename}` : file.filename
+  const fileStream = fs.createWriteStream(`${path}/${fileName}`)
 
---open, -o [id]
-Open a gist in your browser
+  return new Promise((resolve) =>
+    https.get(file.raw_url, (response) => {
+      response.pipe(fileStream)
+      console.log(chalk.green(`${fileName} downloaded`))
+      resolve(file)
+    })
+  )
+}
 
---starred, -s
-Just show starred gists for list, download or open
+export const downloadGist = ({ id, files }) => {
+  const path = `${process.cwd()}/${id}`
+  createFolderIfNotExist(path)
+  const fileList = Object.values(files)
+  const promises = []
+  for (const file of fileList) {
+    promises.push(downloadGistFile(file, path))
+  }
+  return Promise.all(promises)
+}
 
---private, -p
-Just show private gists for list, download or open
+export const openGist = async ({ html_url: url }) => {
+  opn(url)
+}
 
---version, -v
-Display the version of Gisti
+export const addGistIdToClipboard = ({ id }) => {
+  clipboardy.write(id)
+}
 
---help, -h
-Show this help
+export const listGists = (gists, withFiles) => {
+  const gistsPromptList = getGistPromptList(gists, withFiles)
+  gistsPromptList.forEach((output) => console.log(output))
+}
 
-${chalk.bold('Configuration')}
-Add your github personal token
-gisti --token [token]
-`
+const getGistPromptList = (gists, withFiles = false) =>
+  gists.reduce((map, gist) => {
+    const fileList = Object.values(gist.files)
+    const bla = [
+      chalk
+        .rgb(184, 190, 202)
+        .bold(
+          `${gist.id} - ${gist.description} - Files:${fileList.length}${
+            gist.public ? '' : chalk.rgb(236, 98, 113)(' [Private]')
+          }`
+        ),
+      ...conditionalAdd(withFiles, ...fileList.map((file) => `- ${file.filename}`)),
+    ]
+    return [...map, ...bla]
+  }, [])
+
+export const getFileContents = (filePaths) =>
+  filePaths.reduce((files, path) => {
+    const parts = path.split('/')
+    const filename = parts[parts.length - 1]
+    const content = fs.readFileSync(path, 'utf8')
+    return { ...files, [filename]: { content } }
+  }, {})

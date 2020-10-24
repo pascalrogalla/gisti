@@ -1,15 +1,8 @@
-import Octokit from '@octokit/rest'
-import Configstore from 'configstore'
+import github from './github'
 
 import { textMatchSearchWords } from './utils'
-import pkg from '../package.json'
 
-const conf = new Configstore(pkg.name, {}, { globalConfigPath: true })
-
-const auth = conf.get('github.token')
-const octokit = new Octokit({
-  auth,
-})
+const octokit = github.getInstance()
 
 export const getPrivateOrStarredGists = (starred, isPrivate) => {
   switch (isPrivate * 2 + starred) {
