@@ -1,6 +1,6 @@
 {
   "name": "gisti",
-  "version": "0.0.12",
+  "version": "1.0.0",
   "description": "GISTI - The interactive CLI for gist",
   "main": "dist/min.bundle.js",
   "scripts": {
