@@ -141,24 +141,6 @@ Options:
   -h, --help     output usage information
 ```
 
-## WIP - Planned Features
-
-- Update
-
-  Update your gist. Make a gist private, Set or change your description
-
-- Add
-
-  Add a file to an existing gist
-
-- Content
-
-  Print the content of a gist to stdout
-
-- Delete option -f, --file
-
-  Delete a specific file of an gist
-
 ## Website
 
 [https://github.com/pascalrogalla/gisti](https://github.com/pascalrogalla/gisti)
@@ -176,11 +158,3 @@ Please report any bugs to https://github.com/pascalrogalla/gisti/issues
 ## LICENSE
 
 Copyright (c) 2019, Pascal Rogalla (MIT License).
-
-## SEE ALSO
-
-https://github.com/defunkt/gist
-
-https://github.com/jdowner/gist
-
-https://github.com/jrbasso/gistit
