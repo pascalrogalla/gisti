@@ -10,7 +10,7 @@
     "start:prod": "npm run build:prod && node ./dist/min.bundle.js",
     "build:prod": "rollup --config --environment PRODUCTION",
     "lint": "eslint ./src/**/*.js",
-    "man": "marked-man --version 'v1.0.0' --manual 'GISTI Help' --section 1 ./doc/man.md > ./man/gisti.1",
+    "man": "marked-man --manual 'GISTI Help' --section 1 ./doc/man.md > ./man/gisti.1",
     "prettify": "prettier \"./src/**/*.js\" --write",
     "prepare-publish": "npm run man && npm run prettify && npm run lint && npm run build:prod"
   },
