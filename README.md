@@ -4,19 +4,15 @@
 
 To learn more, visit [https://github.com/pascalrogalla/gisti](https://github.com/pascalrogalla/gisti)
 
-## SYNOPSIS
-
-`gisti [-l, --list] [-d, --download] [-o, --open] [-s, --starred] [-p, --private] [-v] [-h]`
-
 ## DESCRIPTION
 
 Gisti is a command line tool that supports interactive gist handling in your terminal.
 
 ## WHY?
 
-## Website
+Inspired by `yarn upgrade-interactive`,
 
-[https://github.com/pascalrogalla/gisti](https://github.com/pascalrogalla/gisti)
+this interactive command line tool is designed to act with github gists in an easy way.
 
 ## Install
 
@@ -28,45 +24,150 @@ Gisti is a command line tool that supports interactive gist handling in your ter
 
 `yarn global add gisti`
 
-## EXAMPLES
+## Usage
 
-`gisti -l`
+`gisti [options] [command]`
 
-`gisti -l -p`
+```
+Options:
+  -V, --version                output the version number
+  -h, --help                   output usage information
 
-`gisti -d -s`
+Commands:
+  auth [options] [token]       Set/Update personal access token
+  list [options]               List your gists
+  copy [options]               Copy the id of a gist to clipboard
+  open [options] [id]
+  create [options] <files...>
+  download [options] [id]
+  search [options] [query]
+  delete [options] [id]
+```
 
-`gisti -h`
+### Auth
 
-`gisti -v`
+`gisti auth [options] [token]`
 
-## OPTIONS
+```
+Options:
+  -t, --token <token>  Set token
+  -h, --help           output usage information
+```
 
-`--list`, `-i`
-List your gists
+### List
 
-`--download`, `-d`
-Download a gist
+`gisti list [options]`
 
-`--open`, `-o` `[id]`
-Open a gist in your browser
+```
+Options:
+  -x, --private  List private Gists
+  -s, --starred  List starred Gists
+  -p, --public   List public Gists
+  -f, --files    List files of Gist
+  -h, --help     output usage information
+```
 
-`--starred`, `-s`
-Just show starred gists for list, download or open
+### Copy
 
-`--private`, `-p`
-Just show private gists for list, download or open
+`gisti copy [options]`
 
-`--version`, `-v`
-Display the version of Gisti
+```
+Options:
+  -x, --private  List private Gists
+  -s, --starred  List starred Gists
+  -p, --public   List public Gists
+  -h, --help     output usage information
+```
 
-`--help`, `-h`
-Show this help
+### Open
+
+`gisti open [options] [id]`
+
+```
+Options:
+  --id <id>      Gist id for non-interactive update
+  -x, --private  List private Gists
+  -s, --starred  List starred Gists
+  -p, --public   List public Gists
+  -h, --help     output usage information
+```
+
+### Create
+
+`gisti create [options] <files...>`
+
+```
+Options:
+  -x, --private                    Create private Gist
+  -p, --public                     Create public Gists
+  -d, --description <description>  Set the gist description
+  -h, --help                       output usage information
+```
+
+### Download
+
+`gisti download [options] [id]`
+
+```
+Options:
+  --id <id>      Gist id
+  -x, --private  List private Gists
+  -s, --starred  List starred Gists
+  -p, --public   List public Gists
+  -h, --help     output usage information
+```
+
+### Download
+
+`gisti search [options] [query]`
+
+```
+Options:
+  -l, --list      List search result
+  -c, --copy      Copy the id of one resulted gist
+  -o, --open      Open one resulted gist in browser
+  -d, --download  Download resulted gists
+  -h, --help      output usage information
+```
+
+### Delete
+
+`gisti delete [options] [id]`
+
+```
+Options:
+  -x, --private  List private Gists
+  -p, --public   List public Gists
+  -h, --help     output usage information
+```
+
+## WIP - Planned Features
+
+- Update
+
+  Update your gist. Make a gist private, Set or change your description
+
+- Add
+
+  Add a file to an existing gist
+
+- Content
+
+  Print the content of a gist to stdout
+
+- Delete option -f, --file
+
+  Delete a specific file of an gist
+
+## Website
+
+[https://github.com/pascalrogalla/gisti](https://github.com/pascalrogalla/gisti)
 
 ## CONFIGURATION
 
 Add your github personal token
-`gisti --token [token]`
+
+`gisti auth [token]`
 
 ## BUGS
 

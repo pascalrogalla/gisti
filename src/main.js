@@ -49,7 +49,7 @@ program.name('gisti').description('GISTI - The interactive CLI for gist').versio
 
 program
   .command('auth [token]')
-  .description('Set/Update personal access token')
+  .description('Sets/Updates the personal access token')
   .option('-t, --token <token>', 'Set token')
   .action(async (token, { token: optToken }) => {
     token = token || optToken
@@ -83,7 +83,7 @@ program
 
 program
   .command('copy')
-  .description('Copy the id of a gist to clipboard')
+  .description('Copies the id of a gist to the clipboard')
   .option('-x, --private', 'List private Gists', false)
   .option('-s, --starred', 'List starred Gists', false)
   .option('-p, --public', 'List public Gists', false)
@@ -96,7 +96,7 @@ program
 
 program
   .command('open [id]')
-  .description('')
+  .description('Opens a gist in your browser')
   .option('--id <id>', 'Gist id for non-interactive update')
   .option('-x, --private', 'List private Gists', false)
   .option('-s, --starred', 'List starred Gists', false)
@@ -115,7 +115,7 @@ program
 
 program
   .command('create <files...>')
-  .description('')
+  .description('Creates a new gist')
   .option('-x, --private', 'Create private Gist', true)
   .option('-p, --public', 'Create public Gists', false)
   .option('-d, --description <description>', 'Set the gist description')
@@ -131,28 +131,28 @@ program
     })
   )
 
-program
-  .command('add  <files...>')
-  .description('')
-  .option('--id <id>', 'Gist id for non-interactive add')
-  .option('-d, --description <description>', 'Set the gist description')
-  .action((files, { id }) =>
-    executeIfAuthorized(() => {
-      const result = getFileContents(files)
-      console.log(result)
-      console.log('files', files)
-      console.log('Id', id)
-      //TODO: Add file to gist
-    })
-  )
+// program
+//   .command('add  <files...>')
+//   .description('')
+//   .option('--id <id>', 'Gist id for non-interactive add')
+//   .option('-d, --description <description>', 'Set the gist description')
+//   .action((files, { id }) =>
+//     executeIfAuthorized(() => {
+//       const result = getFileContents(files)
+//       console.log(result)
+//       console.log('files', files)
+//       console.log('Id', id)
+//       //TODO: Add file to gist
+//     })
+//   )
 
 program
   .command('download [id]')
-  .description('')
+  .description('Downloads a gist or gist file')
   .option('--id <id>', 'Gist id')
-  .option('-x, --private', 'Make Gist private', false)
-  .option('-s, --starred', 'Search your starred gists', false)
-  .option('-p, --public', 'List starred Gists', false)
+  .option('-x, --private', 'List private Gists', false)
+  .option('-s, --starred', 'List starred Gists', false)
+  .option('-p, --public', 'List public Gists', false)
   .action((id, { private: isPrivate, id: optId, starred }) =>
     executeIfAuthorized(async () => {
       id = id || optId
@@ -168,7 +168,7 @@ program
 
 program
   .command('search [query]')
-  .description('')
+  .description('Searches for gists')
   .option('-l, --list', 'List search result')
   .option('-c, --copy', 'Copy the id of one resulted gist')
   .option('-o, --open', 'Open one resulted gist in browser')
@@ -189,9 +189,9 @@ program
 
 program
   .command('delete [id]')
-  .description('')
-  .option('-x, --private', 'Make Gist private', false)
-  .option('-p, --public', 'List starred Gists', false)
+  .description('Deletes a gist from github')
+  .option('-x, --private', 'List private Gists', false)
+  .option('-p, --public', 'List public Gists', false)
   .action((id, { private: isPrivate, id: optId, starred }) =>
     executeIfAuthorized(async () => {
       id = id || optId
@@ -207,8 +207,9 @@ program
     })
   )
 
-// TODO: Implement content handling
+// TODO: Implement content handling stdout
 // TODO: Implement Update functionality
+// TODO: Implement Add functionality
 
 const run = () => {
   // clear()
