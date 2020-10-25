@@ -1,70 +1,166 @@
-.TH "GISTI" "1" "October 2020" "v1.0.0" "GISTI Help"
+.TH "GISTI" "1" "October 2020" "" "GISTI Help"
 .SH "NAME"
 \fBGISTI\fR
 .QP
 .P
-GISTI \- The interactive CLI for gist
+GistI(nteractive) \- The interactive CLI for gist
 
 .
 .P
 To learn more, visit https://github\.com/pascalrogalla/gisti \fIhttps://github\.com/pascalrogalla/gisti\fR
-.SH SYNOPSIS
-.P
-\fBgisti [\-l, \-\-list] [\-d, \-\-download] [\-o, \-\-open] [\-s, \-\-starred] [\-p, \-\-private] [\-v] [\-h]\fP
 .SH DESCRIPTION
 .P
 Gisti is a command line tool that supports interactive gist handling in your terminal\.
+.SH WHY?
+.P
+Inspired by \fByarn upgrade\-interactive\fP,
+.P
+this interactive command line tool is designed to act with github gists in an easy way\.
+.SH Install
+.SS npm
+.P
+\fBnpm install \-g gist\fP
+.SS yarn
+.P
+\fByarn global add gisti\fP
+.SH Usage
+.P
+\fBgisti [options] [command]\fP
+.P
+.RS 2
+.nf
+Options:
+  \-V, \-\-version                output the version number
+  \-h, \-\-help                   output usage information
+
+Commands:
+  auth [options] [token]       Set/Update personal access token
+  list [options]               List your gists
+  copy [options]               Copy the id of a gist to clipboard
+  open [options] [id]
+  create [options] <files\.\.\.>
+  download [options] [id]
+  search [options] [query]
+  delete [options] [id]
+.fi
+.RE
+.SS Auth
+.P
+\fBgisti auth [options] [token]\fP
+.P
+.RS 2
+.nf
+Options:
+  \-t, \-\-token <token>  Set token
+  \-h, \-\-help           output usage information
+.fi
+.RE
+.SS List
+.P
+\fBgisti list [options]\fP
+.P
+.RS 2
+.nf
+Options:
+  \-x, \-\-private  List private Gists
+  \-s, \-\-starred  List starred Gists
+  \-p, \-\-public   List public Gists
+  \-f, \-\-files    List files of Gist
+  \-h, \-\-help     output usage information
+.fi
+.RE
+.SS Copy
+.P
+\fBgisti copy [options]\fP
+.P
+.RS 2
+.nf
+Options:
+  \-x, \-\-private  List private Gists
+  \-s, \-\-starred  List starred Gists
+  \-p, \-\-public   List public Gists
+  \-h, \-\-help     output usage information
+.fi
+.RE
+.SS Open
+.P
+\fBgisti open [options] [id]\fP
+.P
+.RS 2
+.nf
+Options:
+  \-\-id <id>      Gist id for non\-interactive update
+  \-x, \-\-private  List private Gists
+  \-s, \-\-starred  List starred Gists
+  \-p, \-\-public   List public Gists
+  \-h, \-\-help     output usage information
+.fi
+.RE
+.SS Create
+.P
+\fBgisti create [options] <files\.\.\.>\fP
+.P
+.RS 2
+.nf
+Options:
+  \-x, \-\-private                    Create private Gist
+  \-p, \-\-public                     Create public Gists
+  \-d, \-\-description <description>  Set the gist description
+  \-h, \-\-help                       output usage information
+.fi
+.RE
+.SS Download
+.P
+\fBgisti download [options] [id]\fP
+.P
+.RS 2
+.nf
+Options:
+  \-\-id <id>      Gist id
+  \-x, \-\-private  List private Gists
+  \-s, \-\-starred  List starred Gists
+  \-p, \-\-public   List public Gists
+  \-h, \-\-help     output usage information
+.fi
+.RE
+.SS Download
+.P
+\fBgisti search [options] [query]\fP
+.P
+.RS 2
+.nf
+Options:
+  \-l, \-\-list      List search result
+  \-c, \-\-copy      Copy the id of one resulted gist
+  \-o, \-\-open      Open one resulted gist in browser
+  \-d, \-\-download  Download resulted gists
+  \-h, \-\-help      output usage information
+.fi
+.RE
+.SS Delete
+.P
+\fBgisti delete [options] [id]\fP
+.P
+.RS 2
+.nf
+Options:
+  \-x, \-\-private  List private Gists
+  \-p, \-\-public   List public Gists
+  \-h, \-\-help     output usage information
+.fi
+.RE
 .SH Website
 .P
 https://github\.com/pascalrogalla/gisti \fIhttps://github\.com/pascalrogalla/gisti\fR
-.SH EXAMPLES
-.P
-\fBnpm install gisti \-g\fP
-.P
-\fBgisti \-l\fP
-.P
-\fBgisti \-l \-p\fP
-.P
-\fBgisti \-d \-s\fP
-.P
-\fBgisti \-h\fP
-.P
-\fBgisti \-v\fP
-.SH OPTIONS
-.P
-\fB\-\-list\fP, \fB\-i\fP
-List your gists
-.P
-\fB\-\-download\fP, \fB\-d\fP
-Download a gist
-.P
-\fB\-\-open\fP, \fB\-o\fP \fB[id]\fP
-Open a gist in your browser
-.P
-\fB\-\-starred\fP, \fB\-s\fP
-Just show starred gists for list, download or open
-.P
-\fB\-\-private\fP, \fB\-p\fP
-Just show private gists for list, download or open
-.P
-\fB\-\-version\fP, \fB\-v\fP
-Display the version of Gisti
-.P
-\fB\-\-help\fP, \fB\-h\fP
-Show this help
 .SH CONFIGURATION
 .P
 Add your github personal token
-\fBgisti \-\-token [token]\fP
+.P
+\fBgisti auth [token]\fP
 .SH BUGS
 .P
-Please report any bugs to https://github\.com/pascalrogalla/gisti\.
+Please report any bugs to https://github\.com/pascalrogalla/gisti/issues
 .SH LICENSE
 .P
 Copyright (c) 2019, Pascal Rogalla (MIT License)\.
-.SH SEE ALSO
-.P
-https://github\.com/defunkt/gist
-.P
-https://github\.com/jrbasso/gistit/
 
