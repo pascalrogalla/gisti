@@ -69,7 +69,7 @@ program
 
 program
   .command('list')
-  .description('List your gists')
+  .description('Lists your gists')
   .option('-x, --private', 'List private Gists', false)
   .option('-s, --starred', 'List starred Gists', false)
   .option('-p, --public', 'List public Gists', false)
