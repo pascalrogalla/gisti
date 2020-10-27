@@ -111,3 +111,30 @@ export const getFileContents = (filePaths) =>
     const content = fs.readFileSync(path, 'utf8')
     return { ...files, [filename]: { content } }
   }, {})
+
+export const output = {
+  PUBLIC: 1,
+  PRIVATE: 2,
+  STARRED: 4,
+}
+
+export const getOptions = ({ isStarred, isPrivate, isPublic, isAll, isOwn }) => {
+  let option = 0
+  if (isPublic) {
+    option = option | output.PUBLIC
+  }
+  if (isPrivate) {
+    option = option | output.PRIVATE
+  }
+  if (isOwn) {
+    option = option | output.PUBLIC | output.PRIVATE
+  }
+  if (isStarred) {
+    option = option | output.STARRED
+  }
+  if (isAll) {
+    option = option | output.PUBLIC | output.PRIVATE | output.STARRED
+  }
+
+  return option
+}

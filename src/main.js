@@ -16,10 +16,24 @@ import {
   interactiveDeleteGist,
 } from './interactiveHandler'
 
-import { createGist, getGist, getPrivateOrStarredGists, getGistsByQuery, deleteGist } from './api'
+import {
+  createGist,
+  getGist,
+  getPrivateOrStarredGists,
+  getGistsByQuery,
+  deleteGist,
+  getGistsByOptions,
+} from './api'
 
-import { executeIfAuthorized, openGist, listGists, downloadGist, getFileContents } from './utils'
-import { promptConfirmDelete, promptAccessToken } from './prompt'
+import {
+  executeIfAuthorized,
+  openGist,
+  listGists,
+  downloadGist,
+  getFileContents,
+  getOptions,
+} from './utils'
+import { promptConfirmDelete, promptAccessToken, promptListChoice } from './prompt'
 import chalk from 'chalk'
 
 const openGistById = async (id) => {
@@ -70,15 +84,32 @@ program
 program
   .command('list')
   .description('Lists your gists')
+  .option('-a, --all', 'List all Gists', false)
+  .option('-o, --own', 'List your Gists', false)
   .option('-x, --private', 'List private Gists', false)
   .option('-s, --starred', 'List starred Gists', false)
   .option('-p, --public', 'List public Gists', false)
   .option('-f, --files', 'List files of Gist', false)
-  .action(({ starred, private: isPrivate, files: withFiles }) =>
-    executeIfAuthorized(async () => {
-      const gists = await getPrivateOrStarredGists(starred, isPrivate)
-      listGists(gists, withFiles)
-    })
+  .action(
+    ({
+      starred: isStarred,
+      private: isPrivate,
+      public: isPublic,
+      all: isAll,
+      own: isOwn,
+      files: withFiles,
+    }) =>
+      executeIfAuthorized(async () => {
+        const options = getOptions({ isStarred, isPrivate, isPublic, isAll, isOwn })
+        if (options) {
+          const gists = await getGistsByOptions(options)
+          listGists(gists, withFiles)
+        } else {
+          const { choice } = await promptListChoice()
+          const gists = await getGistsByOptions(choice)
+          listGists(gists, withFiles)
+        }
+      })
   )
 
 program

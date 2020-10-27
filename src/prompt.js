@@ -1,4 +1,5 @@
 import inquirer from 'inquirer'
+import { listChoices } from './choices'
 
 export const promptConfirmDelete = () => {
   const questions = [
@@ -153,6 +154,21 @@ export const promptDeleteGist = async (choices) => {
 
         return true
       },
+    },
+  ]
+
+  return inquirer.prompt(question)
+}
+
+export const promptListChoice = () => {
+  const question = [
+    {
+      type: 'list',
+      message: 'Select which gists you want to list',
+      name: 'choice',
+      default: listChoices[0],
+      pageSize: listChoices.length,
+      choices: listChoices,
     },
   ]
 

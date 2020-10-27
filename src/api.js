@@ -1,6 +1,6 @@
 import github from './github'
 
-import { textMatchSearchWords } from './utils'
+import { textMatchSearchWords, output } from './utils'
 
 const octokit = github.getInstance()
 
@@ -15,6 +15,29 @@ export const getPrivateOrStarredGists = (starred, isPrivate) => {
   }
 }
 
+export const getGistsByOptions = async (options) => {
+  let gists = []
+  if (options & output.PUBLIC) {
+    const publicGists = await getGists()
+    gists = [...gists, ...publicGists]
+  }
+  if (options & output.PRIVATE) {
+    const privateGists = await getPrivateGists()
+    gists = [...gists, ...privateGists]
+  }
+  if (options & output.STARRED) {
+    const starredGists = await getStarredGists()
+    gists = [...gists, ...starredGists]
+  }
+  return gists
+}
+
+export const getAllGists = async () => {
+  const { data: ownGists } = await octokit.gists.list()
+  const { data: starredGists } = await octokit.gists.listStarred()
+  return [...ownGists, ...starredGists]
+}
+
 export const getGists = async () => {
   const { data: gists } = await octokit.gists.list()
   return gists
@@ -22,12 +45,7 @@ export const getGists = async () => {
 
 export const getPrivateGists = async () => {
   const { data } = await octokit.gists.list()
-  return data.filter(({ public: p }) => p === false)
-}
-
-export const getPublicGists = async () => {
-  const { data } = await octokit.gists.listPublic()
-  return data.filter(({ public: p }) => p === false)
+  return data.filter(({ public: isPublic }) => isPublic === false)
 }
 
 export const getStarredGists = async () => {
