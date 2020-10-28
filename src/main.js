@@ -210,20 +210,40 @@ program
   .command('download [id]')
   .description('Downloads a gist or gist file')
   .option('--id <id>', 'Gist id')
+  .option('-a, --all', 'List all Gists', false)
+  .option('-o, --own', 'List your Gists', false)
   .option('-x, --private', 'List private Gists', false)
   .option('-s, --starred', 'List starred Gists', false)
   .option('-p, --public', 'List public Gists', false)
-  .action((id, { private: isPrivate, id: optId, starred }) =>
-    executeIfAuthorized(async () => {
-      id = id || optId
-      if (id) {
-        const { data: gist } = await getGist(id)
-        downloadGist(gist)
-      } else {
-        const gists = await getPrivateOrStarredGists(starred, isPrivate)
-        interactiveDownloadGist(gists)
+  .action(
+    (
+      id,
+      {
+        id: optId,
+        starred: isStarred,
+        private: isPrivate,
+        public: isPublic,
+        all: isAll,
+        own: isOwn,
       }
-    })
+    ) =>
+      executeIfAuthorized(async () => {
+        id = id || optId
+        if (id) {
+          const { data: gist } = await getGist(id)
+          downloadGist(gist)
+        } else {
+          const options = getOptions({ isStarred, isPrivate, isPublic, isAll, isOwn })
+          if (options) {
+            const gists = await getGistsByOptions(options)
+            interactiveDownloadGist(gists)
+          } else {
+            const { choice } = await promptListChoice()
+            const gists = await getGistsByOptions(choice)
+            interactiveDownloadGist(gists)
+          }
+        }
+      })
   )
 
 program
