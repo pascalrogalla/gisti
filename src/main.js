@@ -138,19 +138,39 @@ program
   .command('open [id]')
   .description('Opens a gist in your browser')
   .option('--id <id>', 'Gist id for non-interactive update')
+  .option('-a, --all', 'List all Gists', false)
+  .option('-o, --own', 'List your Gists', false)
   .option('-x, --private', 'List private Gists', false)
   .option('-s, --starred', 'List starred Gists', false)
   .option('-p, --public', 'List public Gists', false)
-  .action((id, { id: optId, starred, private: isPrivate }) =>
-    executeIfAuthorized(async () => {
-      id = id || optId
-      if (id) {
-        openGistById(id)
-      } else {
-        const gists = await getPrivateOrStarredGists(starred, isPrivate)
-        interactiveOpenGist(gists)
+  .action(
+    (
+      id,
+      {
+        id: optId,
+        starred: isStarred,
+        private: isPrivate,
+        public: isPublic,
+        all: isAll,
+        own: isOwn,
       }
-    })
+    ) =>
+      executeIfAuthorized(async () => {
+        id = id || optId
+        if (id) {
+          openGistById(id)
+        } else {
+          const options = getOptions({ isStarred, isPrivate, isPublic, isAll, isOwn })
+          if (options) {
+            const gists = await getGistsByOptions(options)
+            interactiveOpenGist(gists)
+          } else {
+            const { choice } = await promptListChoice()
+            const gists = await getGistsByOptions(choice)
+            interactiveOpenGist(gists)
+          }
+        }
+      })
   )
 
 program
