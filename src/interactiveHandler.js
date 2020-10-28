@@ -12,7 +12,14 @@ import {
   promptSearchGist,
   promptUpdateGist,
 } from './prompt'
-import { downloadGist, downloadGistFile, openGist, addGistIdToClipboard } from './utils'
+import {
+  downloadGist,
+  downloadGistFile,
+  openGist,
+  addGistIdToClipboard,
+  action,
+  listGists,
+} from './utils'
 
 //------------------------------------------
 export const interactiveSearchGist = async () => {
@@ -72,4 +79,24 @@ export const interactiveUpdateGist = async (gists, filePath) => {
     const { gistToUpdate } = await promptUpdateGist(choices)
     console.log(gistToUpdate, fileContent)
   })
+}
+
+export const getActionByOptions = (options) => {
+  if (options & action.LIST) {
+    return listGists
+  }
+  if (options & action.OPEN) {
+    return interactiveOpenGist
+  }
+  if (options & action.COPY) {
+    return interactiveCopyGistId
+  }
+  if (options & action.DOWNLOAD) {
+    return interactiveDownloadGist
+  }
+  if (options & action.DELETE) {
+    return interactiveDeleteGist
+  }
+
+  return listGists
 }

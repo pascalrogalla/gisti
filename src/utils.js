@@ -139,3 +139,30 @@ export const getListOptions = ({ isStarred, isPrivate, isPublic, isAll, isOwn })
 
   return option
 }
+
+export const action = {
+  LIST: 1,
+  OPEN: 2,
+  COPY: 4,
+  DOWNLOAD: 8,
+  DELETE: 16,
+}
+export const getActionOptions = ({ isList, isOpen, isCopy, isDownload, isDelete }) => {
+  if (isList) {
+    return action.LIST
+  }
+  if (isOpen) {
+    return action.OPEN
+  }
+  if (isCopy) {
+    return action.COPY
+  }
+  if (isDownload) {
+    return action.DOWNLOAD
+  }
+  if (isDelete) {
+    return action.DELETE
+  }
+
+  return false
+}

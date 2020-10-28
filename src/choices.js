@@ -1,6 +1,6 @@
 import inquirer from 'inquirer'
 import chalk from 'chalk'
-import { conditionalAdd, output } from './utils'
+import { action, conditionalAdd, output } from './utils'
 
 export const getGistDownloadChoices = async (gists) => {
   const gistFileList = gists.reduce((map, gist) => {
@@ -91,5 +91,28 @@ export const listOwnerChoices = [
   {
     name: 'Private',
     value: output.PRIVATE,
+  },
+]
+
+export const actionChoices = [
+  {
+    name: 'List',
+    value: action.LIST,
+  },
+  {
+    name: 'Open',
+    value: action.OPEN,
+  },
+  {
+    name: 'Copy',
+    value: action.COPY,
+  },
+  {
+    name: 'Download',
+    value: action.DOWNLOAD,
+  },
+  {
+    name: 'Delete',
+    value: action.DELETE,
   },
 ]

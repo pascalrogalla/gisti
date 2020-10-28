@@ -8,7 +8,7 @@ export const getGistsByOptions = async (options) => {
   let gists = []
   if (options & output.PUBLIC) {
     const publicGists = await getGists()
-    gists = [...gists, ...publicGists]
+    gists = publicGists
   }
   if (options & output.PRIVATE) {
     const privateGists = await getPrivateGists()

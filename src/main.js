@@ -14,6 +14,7 @@ import {
   interactiveCopyGistId,
   interactiveSearchGist,
   interactiveDeleteGist,
+  getActionByOptions,
 } from './interactiveHandler'
 
 import { createGist, getGist, getGistsByQuery, deleteGist, getGistsByOptions } from './api'
@@ -25,12 +26,14 @@ import {
   downloadGist,
   getFileContents,
   getListOptions,
+  getActionOptions,
 } from './utils'
 import {
   promptConfirmDelete,
   promptAccessToken,
   promptListChoice,
   promptListOwnerChoice,
+  promptActionChoice,
 } from './prompt'
 import chalk from 'chalk'
 
@@ -38,23 +41,6 @@ const openGistById = async (id) => {
   const { data: gist } = await getGist(id)
   openGist(gist)
   return Promise.resolve()
-}
-
-const getFunction = ({ list, copy, open, download }) => {
-  if (download) {
-    return interactiveDownloadGist
-  }
-  if (list) {
-    return listGists
-  }
-  if (copy) {
-    return interactiveCopyGistId
-  }
-  if (open) {
-    return interactiveOpenGist
-  }
-
-  return listGists
 }
 
 program.name('gisti').description('GISTI - The interactive CLI for gist').version(pkg.version)
@@ -247,22 +233,44 @@ program
 program
   .command('search [query]')
   .description('Searches for gists')
+  .option('-q, --query [query]', 'Search query')
   .option('-l, --list', 'List search result')
   .option('-c, --copy', 'Copy the id of one resulted gist')
   .option('-o, --open', 'Open one resulted gist in browser')
   .option('-d, --download', 'Download resulted gists')
-  .action((query, { list, copy, open, download }) =>
-    executeIfAuthorized(async () => {
-      const action = getFunction({ list, copy, open, download })
-
-      if (query) {
-        const gists = await getGistsByQuery(query)
-        action(gists)
-      } else {
-        const gists = await interactiveSearchGist()
-        action(gists)
+  .option('-r, --delete', 'Delete resulted gists')
+  .action(
+    (
+      query,
+      {
+        query: optQuery,
+        list: isList,
+        copy: isCopy,
+        open: isOpen,
+        download: isDownload,
+        delete: isDelete,
       }
-    })
+    ) =>
+      executeIfAuthorized(async () => {
+        query = query || optQuery
+        let gists = []
+        if (query) {
+          gists = await getGistsByQuery(query)
+        } else {
+          gists = await interactiveSearchGist()
+        }
+
+        const options = getActionOptions({ isList, isOpen, isCopy, isDownload, isDelete })
+
+        let action
+        if (options) {
+          action = getActionByOptions(options)
+        } else {
+          const { choice } = await promptActionChoice()
+          action = getActionByOptions(choice)
+        }
+        action(gists)
+      })
   )
 
 program

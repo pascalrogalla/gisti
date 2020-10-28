@@ -1,5 +1,5 @@
 import inquirer from 'inquirer'
-import { listChoices, listOwnerChoices } from './choices'
+import { actionChoices, listChoices, listOwnerChoices } from './choices'
 
 export const promptConfirmDelete = () => {
   const questions = [
@@ -184,6 +184,21 @@ export const promptListOwnerChoice = () => {
       default: listOwnerChoices[0],
       pageSize: listOwnerChoices.length,
       choices: listOwnerChoices,
+    },
+  ]
+
+  return inquirer.prompt(question)
+}
+
+export const promptActionChoice = () => {
+  const question = [
+    {
+      type: 'list',
+      message: 'Select a action for the results',
+      name: 'choice',
+      default: actionChoices[0],
+      pageSize: actionChoices.length,
+      choices: actionChoices,
     },
   ]
 
