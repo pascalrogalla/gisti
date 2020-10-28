@@ -16,14 +16,7 @@ import {
   interactiveDeleteGist,
 } from './interactiveHandler'
 
-import {
-  createGist,
-  getGist,
-  getPrivateOrStarredGists,
-  getGistsByQuery,
-  deleteGist,
-  getGistsByOptions,
-} from './api'
+import { createGist, getGist, getGistsByQuery, deleteGist, getGistsByOptions } from './api'
 
 import {
   executeIfAuthorized,
@@ -31,9 +24,14 @@ import {
   listGists,
   downloadGist,
   getFileContents,
-  getOptions,
+  getListOptions,
 } from './utils'
-import { promptConfirmDelete, promptAccessToken, promptListChoice } from './prompt'
+import {
+  promptConfirmDelete,
+  promptAccessToken,
+  promptListChoice,
+  promptListOwnerChoice,
+} from './prompt'
 import chalk from 'chalk'
 
 const openGistById = async (id) => {
@@ -100,7 +98,7 @@ program
       files: withFiles,
     }) =>
       executeIfAuthorized(async () => {
-        const options = getOptions({ isStarred, isPrivate, isPublic, isAll, isOwn })
+        const options = getListOptions({ isStarred, isPrivate, isPublic, isAll, isOwn })
         if (options) {
           const gists = await getGistsByOptions(options)
           listGists(gists, withFiles)
@@ -122,7 +120,7 @@ program
   .option('-p, --public', 'List public Gists', false)
   .action(({ starred: isStarred, private: isPrivate, public: isPublic, all: isAll, own: isOwn }) =>
     executeIfAuthorized(async () => {
-      const options = getOptions({ isStarred, isPrivate, isPublic, isAll, isOwn })
+      const options = getListOptions({ isStarred, isPrivate, isPublic, isAll, isOwn })
       if (options) {
         const gists = await getGistsByOptions(options)
         interactiveCopyGistId(gists)
@@ -160,7 +158,7 @@ program
         if (id) {
           openGistById(id)
         } else {
-          const options = getOptions({ isStarred, isPrivate, isPublic, isAll, isOwn })
+          const options = getListOptions({ isStarred, isPrivate, isPublic, isAll, isOwn })
           if (options) {
             const gists = await getGistsByOptions(options)
             interactiveOpenGist(gists)
@@ -233,7 +231,7 @@ program
           const { data: gist } = await getGist(id)
           downloadGist(gist)
         } else {
-          const options = getOptions({ isStarred, isPrivate, isPublic, isAll, isOwn })
+          const options = getListOptions({ isStarred, isPrivate, isPublic, isAll, isOwn })
           if (options) {
             const gists = await getGistsByOptions(options)
             interactiveDownloadGist(gists)
@@ -270,9 +268,10 @@ program
 program
   .command('delete [id]')
   .description('Deletes a gist from github')
+  .option('-o, --own', 'List your Gists', false)
   .option('-x, --private', 'List private Gists', false)
-  .option('-p, --public', 'List public Gists', false)
-  .action((id, { private: isPrivate, id: optId, starred }) =>
+  .option('-s, --starred', 'List starred Gists', false)
+  .action((id, { id: optId, private: isPrivate, public: isPublic, own: isOwn }) =>
     executeIfAuthorized(async () => {
       id = id || optId
       if (id) {
@@ -281,8 +280,16 @@ program
           deleteGist(id)
         }
       } else {
-        const gists = await getPrivateOrStarredGists(starred, isPrivate)
-        interactiveDeleteGist(gists)
+        const options = getListOptions({ isPrivate, isPublic, isOwn })
+
+        if (options) {
+          const gists = await getGistsByOptions(options)
+          interactiveDeleteGist(gists)
+        } else {
+          const { choice } = await promptListOwnerChoice()
+          const gists = await getGistsByOptions(choice)
+          interactiveDeleteGist(gists)
+        }
       }
     })
   )

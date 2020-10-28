@@ -78,3 +78,18 @@ export const listChoices = [
     value: output.STARRED,
   },
 ]
+
+export const listOwnerChoices = [
+  {
+    name: 'Own - All your gists',
+    value: output.PUBLIC | output.PRIVATE,
+  },
+  {
+    name: 'Public',
+    value: output.PUBLIC,
+  },
+  {
+    name: 'Private',
+    value: output.PRIVATE,
+  },
+]

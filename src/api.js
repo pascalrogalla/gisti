@@ -4,17 +4,6 @@ import { textMatchSearchWords, output } from './utils'
 
 const octokit = github.getInstance()
 
-export const getPrivateOrStarredGists = (starred, isPrivate) => {
-  switch (isPrivate * 2 + starred) {
-    case 1:
-      return getStarredGists()
-    case 2:
-      return getPrivateGists()
-    default:
-      return getGists()
-  }
-}
-
 export const getGistsByOptions = async (options) => {
   let gists = []
   if (options & output.PUBLIC) {

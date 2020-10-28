@@ -118,8 +118,9 @@ export const output = {
   STARRED: 4,
 }
 
-export const getOptions = ({ isStarred, isPrivate, isPublic, isAll, isOwn }) => {
-  let option = 0
+export const getListOptions = ({ isStarred, isPrivate, isPublic, isAll, isOwn }) => {
+  let option = false
+
   if (isPublic) {
     option = option | output.PUBLIC
   }
