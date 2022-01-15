@@ -824,9 +824,9 @@ marked-man@^0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/marked-man/-/marked-man-0.7.0.tgz#220ba01d275d16f1a98e4e7fc3c5eac0630c68e4"
 
-marked@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/marked/-/marked-0.7.0.tgz#b64201f051d271b1edc10a04d1ae9b74bb8e5c0e"
+marked@^4.0.10:
+  version "4.0.10"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-4.0.10.tgz#423e295385cc0c3a70fa495e0df68b007b879423"
 
 merge-stream@^2.0.0:
   version "2.0.0"
